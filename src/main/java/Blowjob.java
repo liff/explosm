@@ -1,5 +1,4 @@
 import org.newdawn.slick.*;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,8 +16,8 @@ public class Blowjob extends BasicGame {
     private Image background;
     private Color backgroundColor;
     private List<Position> cuts;
-
     private Input input;
+    private List<Double> koordinaatit;
 
     public Blowjob() {
         super("Blowjob");
@@ -35,6 +34,7 @@ public class Blowjob extends BasicGame {
         input = gc.getInput();
         background = new Image("src/main/resources/testi.png");
         backgroundColor = background.getColor(5, 5);
+        koordinaatit = LueLiikerata.getSkaalattuLista();
     }
 
     @Override
