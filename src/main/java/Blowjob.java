@@ -1,7 +1,9 @@
 import org.newdawn.slick.*;
+import java.util.*;
 
 public class Blowjob extends BasicGame {
     private final Heart heart;
+    private List<Double> koordinaatit;
 
     public Blowjob() {
         super("Blowjob");
@@ -10,6 +12,8 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void init(GameContainer gc) throws SlickException {
+        LueLiikerata.main(new String[]{});
+        koordinaatit = LueLiikerata.getSkaalattuLista();
         heart.reset();
     }
 
@@ -24,6 +28,13 @@ public class Blowjob extends BasicGame {
         Position position = heart.distortMouse(Position.fromMouse(input));
 
         g.drawString("sakset", position.x, position.y);
+        float x = 0;
+        for (Double item : koordinaatit)
+        {
+            float f = item.floatValue();
+         g.drawLine(x,f*100,x,f*100+10);
+            x++;
+        }
     }
 
     public static void main(String[] args) throws SlickException {
