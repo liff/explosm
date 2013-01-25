@@ -2,20 +2,33 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Level {
     public final long allowedTime;
     public long timeRemaining;
     public final Image background;
+    public final List<Image> wireOverlays;
     public final Color backgroundColor;
 
-    public Level(final long allowedTime, final Image background) {
+    public Level(final long allowedTime, final Image background, final List<Image> wireOverlays) throws SlickException {
         this.allowedTime = allowedTime;
         this.background = background;
+        this.wireOverlays = wireOverlays;
         this.backgroundColor = background.getColor(5, 5);
     }
 
-    public Level(final long allowedTime, final String backgroundFile) throws SlickException {
-        this(allowedTime, new Image(backgroundFile));
+    public Level(final long allowedTime, final String backgroundFile, final List<String> wireOverlayFiles) throws SlickException {
+        this(allowedTime, new Image(backgroundFile), loadWireOverlays(wireOverlayFiles));
+    }
+
+    private static List<Image> loadWireOverlays(final List<String> wireOverlayFiles)  throws SlickException {
+        final List<Image> wireOverlayImages = new ArrayList<Image>();
+        for (String wireOverlayFile: wireOverlayFiles) {
+            wireOverlayImages.add(new Image(wireOverlayFile));
+        }
+        return wireOverlayImages;
     }
 
     public void update(final int delta) {
