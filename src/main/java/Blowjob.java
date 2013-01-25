@@ -7,8 +7,7 @@ public class Blowjob extends BasicGame {
     private static final int MIN_FRAME_RATE = 10;
     private static final int ALLOCATED_TIME = 3 * 60 * 1000 + 6000;
 
-    private Heart heart;
-    private final Position position;
+    private Player player;
     private final List<Line> lines;
     private final List<List<Position>> allPoints;
     private Line currentLine;
@@ -17,32 +16,36 @@ public class Blowjob extends BasicGame {
     private Color backgroundColor;
     private List<Position> cuts;
     private Input input;
-    private List<Double> koordinaatit;
+    private Sound beat;
 
     public Blowjob() throws SlickException {
         super("Blowjob");
         lines = new LinkedList<Line>();
         allPoints = new LinkedList<List<Position>>();
-        position = new Position();
         cuts = new LinkedList<Position>();
         timeRemaining = ALLOCATED_TIME;
     }
 
     @Override
     public void init(GameContainer gc) throws SlickException {
-        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read());
-        heart.speed = 10;
+        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read());
+        player = new Player(heart);
+        heart.speed = 3; // XXX
+        System.out.println("heart duration is " + player.getBeatDuration());
         input = gc.getInput();
         background = new Image("src/main/resources/testi.png");
         backgroundColor = background.getColor(5, 5);
+        beat = new Sound("src/main/resources/beat1.wav");
+        beat.loop(0.5f, 1.0f);
     }
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
         timeRemaining -= delta;
-        position.update(input);
-        heart.advanceBy(delta);
-        heart.distortMouse(position);
+        player.setPositionAndUpdate(input, delta);
+        if (currentLine != null) {
+            currentLine.end = player.getDistrubedPosition();
+        }
     }
 
     private long remainingMinutes() {
@@ -60,8 +63,9 @@ public class Blowjob extends BasicGame {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.drawImage(background, 0, 0);
-        g.drawString("sakset", position.x, position.y);
+        g.drawString("sakset", player.getDistrubedPosition().x, player.getDistrubedPosition().y);
         g.drawString(String.format("%02d:%02d.%d", remainingMinutes(), remainingSeconds(), remainingTenths()), 0, 0);
+        g.drawString(String.format("%.2f BPM", player.getBPM()), 0, 40);
         //for (Line line: lines) {
         //    g.drawLine(line.start.x, line.start.y, line.end.x, line.end.y);
         //}
@@ -80,7 +84,7 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void mousePressed(int button, int x, int y) {
-        currentLine = new Line(position.copy(), position);
+        currentLine = new Line(player.getDistrubedPosition(), player.getDistrubedPosition());
     }
 
     private void detectCuts(final Line line) {
@@ -105,7 +109,7 @@ public class Blowjob extends BasicGame {
     @Override
     public void mouseReleased(int button, int x, int y) {
         if (currentLine != null) {
-            currentLine.end = position.copy();
+            currentLine.end = player.getDistrubedPosition();
             lines.add(currentLine);
             detectCuts(currentLine);
             List<Position> points = Util.interpolate(currentLine.start, currentLine.end, 100);
@@ -114,19 +118,19 @@ public class Blowjob extends BasicGame {
         }
     }
 
-    private static int getMinimumFrameTime() {
-        return 1000 / MAX_FRAME_RATE;
+    private static double getMinimumFrameTime() {
+        return 1000.0 / MAX_FRAME_RATE;
     }
 
-    private static int getMaximumFrameTime() {
-        return 1000 / MIN_FRAME_RATE;
+    private static double getMaximumFrameTime() {
+        return 1000.0 / MIN_FRAME_RATE;
     }
 
     public static void main(String[] args) throws SlickException {
         AppGameContainer app = new AppGameContainer(new Blowjob());
 
-        app.setMinimumLogicUpdateInterval(getMinimumFrameTime());
-        app.setMaximumLogicUpdateInterval(getMaximumFrameTime());
+        app.setMinimumLogicUpdateInterval((int)getMinimumFrameTime());
+        app.setMaximumLogicUpdateInterval((int)getMaximumFrameTime());
 
         app.setDisplayMode(800, 600, false);
         app.setMouseGrabbed(true);

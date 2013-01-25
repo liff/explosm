@@ -18,15 +18,6 @@ class Position {
         y += dy;
     }
 
-    public void update(final Input input) {
-        x = input.getMouseX();
-        y = input.getMouseY();
-    }
-
-    public static Position fromMouse(final Input input) {
-        return new Position(input.getMouseX(), input.getMouseY());
-    }
-
     public String toString() {
         return "Position(" + x + ", " + y + ")";
     }
