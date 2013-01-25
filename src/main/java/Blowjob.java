@@ -19,11 +19,10 @@ public class Blowjob extends BasicGame {
     private Input input;
     private List<Double> koordinaatit;
 
-    public Blowjob() {
+    public Blowjob() throws SlickException {
         super("Blowjob");
         lines = new LinkedList<Line>();
         allPoints = new LinkedList<List<Position>>();
-        heart = new Heart(getMinimumFrameTime());
         position = new Position();
         cuts = new LinkedList<Position>();
         timeRemaining = ALLOCATED_TIME;
@@ -31,10 +30,11 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void init(GameContainer gc) throws SlickException {
+        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read());
+        heart.speed = 10;
         input = gc.getInput();
         background = new Image("src/main/resources/testi.png");
         backgroundColor = background.getColor(5, 5);
-        koordinaatit = LueLiikerata.getSkaalattuLista();
     }
 
     @Override

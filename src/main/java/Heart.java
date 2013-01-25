@@ -1,19 +1,23 @@
+import java.util.List;
+
 public class Heart {
     private final int frameTime;
-    private double time;
+    private int time;
+    private List<Double> points;
+    public int speed;
 
-    public Heart(final int frameTime) {
+    public Heart(final int frameTime, List<Double> points) {
         this.frameTime = frameTime;
-        this.time = 0.0;
+        this.time = 0;
+        this.points = points;
+        this.speed = 1;
     }
 
     public void distortMouse(final Position position) {
-        final int dx = (int)(3 * Math.sin(time));
-        final int dy = (int)(10 * Math.cos(time));
-        position.adjustBy(dx, dy);
+        position.y += points.get(time % points.size()) * 50;
     }
 
     public void advanceBy(final int milliseconds) {
-        time += (double)frameTime / (double)milliseconds / 10.0;
+        time += speed * Math.max(1, frameTime / milliseconds);
     }
 }

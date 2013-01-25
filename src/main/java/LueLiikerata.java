@@ -8,19 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LueLiikerata {
-
-    private static List<Double> ySkaalattuna;
-
-    public LueLiikerata() {
-    }
-                       public static List<Double> getSkaalattuLista () {
-                         return ySkaalattuna;
-
-                       }
-    public static void main(String[] args) throws SlickException {
+    public static List<Double> read() throws SlickException {
         Image kuva = new Image("src/main/resources/kayra.png");
         List<Double> yKoordinaatit = new ArrayList<Double>();
-        ySkaalattuna = new ArrayList<Double>();
+        List<Double> ySkaalattuna = new ArrayList<Double>();
         double suurin = 0;
         double pienin = 100000;
 
@@ -45,19 +36,7 @@ public class LueLiikerata {
         for (Double item : yKoordinaatit) {
           ySkaalattuna.add(item / erotus);
         }
-        try {
-            FileWriter outFile = new FileWriter("liikerata");
-            PrintWriter out = new PrintWriter(outFile);
 
-            for (Double item : ySkaalattuna) {
-                out.println(item.toString());
-
-            }
-
-
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return ySkaalattuna;
     }
 }
