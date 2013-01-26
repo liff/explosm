@@ -12,12 +12,23 @@ public class Blowjob extends BasicGame {
     private final List<List<Position>> allPoints;
     private Line currentLine;
     private long timeRemaining;
+    private long timeFlown;
+    private long timeBetweenBeats;
     private Image background;
     private Color backgroundColor;
     private List<Position> cuts;
     private Input input;
-    private Sound beat;
+    private Sound beat1;
+    private Sound beat2;
+    private double beatTimer1;
+    private double beatTimer2;
+    private double beat1Length;
+    private double beat2Length;
 
+    double test;
+    double test2;
+
+    boolean beatsPlayed;
     public Blowjob() throws SlickException {
         super("Blowjob");
         lines = new LinkedList<Line>();
@@ -30,13 +41,31 @@ public class Blowjob extends BasicGame {
     public void init(GameContainer gc) throws SlickException {
         final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read());
         player = new Player(heart);
-        heart.speed = 3; // XXX
+        heart.speed = 6; // XXX
         System.out.println("heart duration is " + player.getBeatDuration());
         input = gc.getInput();
         background = new Image("src/main/resources/testi.png");
         backgroundColor = background.getColor(5, 5);
-        beat = new Sound("src/main/resources/beat1.wav");
-        beat.loop(0.5f, 1.0f);
+        beat1 = new Sound("src/main/resources/beat1.wav");
+        beat2 = new Sound("src/main/resources/beat2.wav");
+        double beatDuration = player.getBeatDuration();
+
+        timeBetweenBeats = 1000;
+
+        //Pitäis saada tapahtumaan jokaisen sykkeen alussa
+        beatTimer1 = beatDuration/10;
+
+        beatTimer2 = beatDuration/3;
+        beat1Length = 182;
+        beat2Length = 285;
+        test = beat1Length / beatDuration;
+        test2 = beat2Length / beatDuration;
+
+        System.out.println("test is " +test);
+        //beat2.loop((float)test, 10.0f);
+
+        beatsPlayed = false;
+
     }
 
     @Override
@@ -46,6 +75,31 @@ public class Blowjob extends BasicGame {
         if (currentLine != null) {
             currentLine.end = player.getDistrubedPosition();
         }
+
+        timeFlown += delta;
+
+        beatTimer1 -= delta;
+
+
+
+       if (beatTimer1 <= 0 && beatsPlayed == false) {
+           beat1.play((float)test, 10.0f);
+           beatTimer1 += player.getBeatDuration(); //tapa minut
+       }
+
+       beatTimer2 -= delta;
+
+       if (beatTimer2 <= 0 && beatsPlayed == false) {
+           beat2.play((float)test2, 10.0f);
+           beatTimer2 += player.getBeatDuration(); //lopeta tuskani
+       }
+
+       // if(timeFlown >= (player.getBeatDuration()/10 + beat1Length + player.getBeatDuration()/3 + beat2Length) ) {
+       //     beatTimer1 = player.getBeatDuration()/10;
+       //     beatTimer2 = player.getBeatDuration()/3;
+       //
+       // }
+
     }
 
     private long remainingMinutes() {
