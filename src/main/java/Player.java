@@ -57,4 +57,8 @@ public class Player {
     public void addBeatListener(Heart.BeatListener listener) {
         heart.addBeatListener(listener);
     }
+
+    public int getBeatSize() {
+        return heart.beatSize;
+    }
 }

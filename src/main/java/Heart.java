@@ -28,13 +28,15 @@ public class Heart {
     private double speed;
     private int index;
     private List<BeatListenerEntry> beatListeners;
+    public int beatSize;
 
-    public Heart(final double frameTime, final List<Double> points, final double initialSpeed) {
+    public Heart(final double frameTime, final List<Double> points, final double initialSpeed, final int beatSize) {
         this.frameTime = frameTime;
         this.points = points;
         this.index = 0;
         this.beatListeners = new ArrayList<BeatListenerEntry>();
         this.setSpeed(initialSpeed);
+        this.beatSize = beatSize;
     }
 
     public void addBeatListener(final BeatListener listener) {
@@ -42,7 +44,7 @@ public class Heart {
     }
 
     public double getAdjustment() {
-        return points.get(index) * 50;
+        return points.get(index) * beatSize;
     }
 
     public double getPhase() {

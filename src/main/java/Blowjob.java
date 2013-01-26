@@ -6,6 +6,7 @@ public class Blowjob extends BasicGame {
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
     private static final int ALLOCATED_TIME = 3 * 60 * 1000 + 6000;
+    private static final int BEAT_SIZE = 50;
 
     private Resources resources;
     private Player player;
@@ -31,7 +32,7 @@ public class Blowjob extends BasicGame {
         cutsG.clear();
         cutsG.setColor(new Color(0, 255, 0));
 
-        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 0.0);
+        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 10.0, BEAT_SIZE);
         player = new Player(heart);
         player.addBeatListener(new Heart.BeatListener() {
             public double phase() {
@@ -119,16 +120,14 @@ public class Blowjob extends BasicGame {
             currentLine = null;
             //allPoints.add(points);
 
-
+            //testiä
+            for(Rectangle rectangle : level.buttonHitboxes)
+            {
+                if(x >= rectangle.x && x <= rectangle.width && y >= rectangle.y && y <= rectangle.height ) {
+                System.out.println("OSUI");
+            }
+            }
         }
-    }
-
-    private static double getMinimumFrameTime() {
-        return 1000.0 / MAX_FRAME_RATE;
-    }
-
-    private static double getMaximumFrameTime() {
-        return 1000.0 / MIN_FRAME_RATE;
     }
 
     private void applyCuts(List<Cut> cuts) throws SlickException {
@@ -137,6 +136,14 @@ public class Blowjob extends BasicGame {
             cutsG.fillOval(cut.start.x, cut.start.y, cut.width, cut.height);
         }
         cutsG.flush();
+    }
+
+    private static double getMinimumFrameTime() {
+        return 1000.0 / MAX_FRAME_RATE;
+    }
+
+    private static double getMaximumFrameTime() {
+        return 1000.0 / MIN_FRAME_RATE;
     }
 
     public static void main(String[] args) throws SlickException {
