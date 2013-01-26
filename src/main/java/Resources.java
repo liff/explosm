@@ -1,5 +1,6 @@
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -18,6 +19,8 @@ public class Resources {
     public final Image buttonOff;
     public final Image compositedBackground;
     public final List<Image> wires;
+    public final Sound beat1;
+    public final Sound beat2;
 
     public Resources() throws SlickException {
         try {
@@ -30,6 +33,8 @@ public class Resources {
             sticker = new Image(URLDecoder.decode(ResourceLoader.getResource("sticker.png").getPath(), "UTF-8"));
             wires = loadWires();
             compositedBackground = createCompositedBackground();
+            beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1.wav").getPath(), "UTF-8"));
+            beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2.wav").getPath(), "UTF-8"));
         }
         catch (UnsupportedEncodingException e) {
             throw new SlickException("PLAH", e);
