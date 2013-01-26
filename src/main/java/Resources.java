@@ -3,6 +3,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,15 +20,20 @@ public class Resources {
     public final List<Image> wires;
 
     public Resources() throws SlickException {
-        background = new Image(ResourceLoader.getResource("background.png").getFile());
-        clockBackground = new Image(ResourceLoader.getResource("clock_background.png").getFile());
-        panelBackground = new Image(ResourceLoader.getResource("panel_background.png").getFile());
-        buttonOn = new Image(ResourceLoader.getResource("button_on.png").getFile());
-        buttonOff = new Image(ResourceLoader.getResource("button_off.png").getFile());
-        connectors = new Image(ResourceLoader.getResource("connectors.png").getFile());
-        sticker = new Image(ResourceLoader.getResource("sticker.png").getFile());
-        wires = loadWires();
-        compositedBackground = createCompositedBackground();
+        try {
+            background = new Image(URLDecoder.decode(ResourceLoader.getResource("background.png").getPath(), "UTF-8"));
+            clockBackground = new Image(URLDecoder.decode(ResourceLoader.getResource("clock_background.png").getPath(), "UTF-8"));
+            panelBackground = new Image(URLDecoder.decode(ResourceLoader.getResource("panel_background.png").getPath(), "UTF-8"));
+            buttonOn = new Image(URLDecoder.decode(ResourceLoader.getResource("button_on.png").getPath(), "UTF-8"));
+            buttonOff = new Image(URLDecoder.decode(ResourceLoader.getResource("button_off.png").getPath(), "UTF-8"));
+            connectors = new Image(URLDecoder.decode(ResourceLoader.getResource("connectors.png").getPath(), "UTF-8"));
+            sticker = new Image(URLDecoder.decode(ResourceLoader.getResource("sticker.png").getPath(), "UTF-8"));
+            wires = loadWires();
+            compositedBackground = createCompositedBackground();
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new SlickException("PLAH", e);
+        }
     }
 
     private Image createCompositedBackground() throws SlickException {
