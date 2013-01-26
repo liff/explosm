@@ -6,11 +6,10 @@ import org.newdawn.slick.SlickException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 
 public class Level {
     public final long allowedTime;
-    public long timeRemaining;
+    public Clock clock;
     private final Resources resources;
     public final Image wireOverlay;
     public final List<Image> wires;
@@ -29,7 +28,7 @@ public class Level {
 
 
         this.allowedTime = allowedTime;
-        this.timeRemaining = this.allowedTime;
+        this.clock = new Clock(resources, this.allowedTime);
     }
     public void recreate() throws SlickException{
         this.buttonOverlay = createButtonOverlay();
@@ -40,23 +39,19 @@ public class Level {
     }
 
     public void update(final int delta) {
-        timeRemaining -= delta;
+        clock.decrement(delta);
     }
 
     private long remainingMinutes() {
-        return timeRemaining / 1000 / 60;
+        return clock.remainingMinutes();
     }
 
     private long remainingSeconds() {
-        return (timeRemaining - (remainingMinutes() * 1000 * 60)) / 1000;
+        return clock.remainingSeconds();
     }
 
     private long remainingTenths() {
-        return (timeRemaining - (remainingSeconds() * 1000) - (remainingMinutes() * 1000 * 60)) / 100;
-    }
-
-    public String remainingTimeString() {
-        return String.format("%02d:%02d.%d", remainingMinutes(), remainingSeconds(), remainingTenths());
+        return clock.remainingTenths();
     }
 
     private Image createWireOverlay() throws SlickException {
@@ -74,8 +69,8 @@ public class Level {
         final Graphics g = image.getGraphics();
         final int originX = 30;
         final int originY = 345;
-        final int buttonWidth = resources.buttonOn.getWidth();
-        final int buttonHeight = resources.buttonOn.getHeight();
+        final int buttonWidth = resources.buttonOff.getWidth();
+        final int buttonHeight = resources.buttonOff.getHeight();
         final int margin = 10;
         //Rectangle rectangle = new Rectangle(buttonX,buttonY,buttonWidth, buttonHeight);
         Rectangle rectangle = new Rectangle(0,0,0,0);
@@ -116,5 +111,4 @@ public class Level {
         }
         return newCuts;
     }
-
 }
