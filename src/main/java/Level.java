@@ -17,6 +17,7 @@ public class Level {
     public final Image buttonOverlay;
     public final Image background;
     public List<Rectangle> buttonHitboxes = new ArrayList<Rectangle>();
+    public boolean[] buttonStates;
 
     public Level(final long allowedTime, final Resources resources) throws SlickException {
         this.resources = resources;
@@ -24,9 +25,14 @@ public class Level {
         this.wires = resources.wires;
         this.wireOverlay = createWireOverlay();
         this.buttonOverlay = createButtonOverlay();
+        this.buttonStates = new boolean[3 * 4];
 
         this.allowedTime = allowedTime;
         this.timeRemaining = this.allowedTime;
+    }
+
+    public void toggleButton(int buttonNumber) {
+        buttonStates[buttonNumber] = !buttonStates[buttonNumber];
     }
 
     public void update(final int delta) {

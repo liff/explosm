@@ -87,7 +87,6 @@ public class Blowjob extends BasicGame {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
         }
 
-
         for(Rectangle rectangle : level.buttonHitboxes) {
             g.drawOval(rectangle.x, rectangle.y, 10,10);
         }
@@ -96,37 +95,20 @@ public class Blowjob extends BasicGame {
     @Override
     public void mousePressed(int button, int x, int y) {
         currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
+        final Position p = player.getDisturbedPosition();
+        for(Rectangle rectangle: level.buttonHitboxes) {
+            if(p.x >= rectangle.x && p.x <= rectangle.endX && p.y >= rectangle.y && p.y <= rectangle.endY) {
+                System.out.println("OSUI: " + rectangle);
+            }
+        }
     }
 
     @Override
     public void mouseReleased(int button, int x, int y) {
-
-        System.out.println("player(x,y): " + player.x + ", " + player.y);
-        //testiä
-        for(Rectangle rectangle : level.buttonHitboxes)
-        {
-            //System.out.println(rectangle);
-            if(player.x >= rectangle.x && player.x <= rectangle.endX && player.y >= rectangle.y && player.y <= rectangle.endY ) {
-
-                System.out.println("OSUI: " + rectangle);
-
-
-            }
-        }
-
         if (currentLine != null) {
             currentLine.end = player.getDisturbedPosition();
             pendingCuts = level.detectCuts(currentLine);
             currentLine = null;
-            //allPoints.add(points);
-
-            //testiä
-            for(Rectangle rectangle : level.buttonHitboxes)
-            {
-                if(x >= rectangle.x && x <= rectangle.width && y >= rectangle.y && y <= rectangle.height ) {
-                System.out.println("OSUI");
-            }
-            }
         }
     }
 
