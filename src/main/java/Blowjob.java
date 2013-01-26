@@ -122,6 +122,14 @@ public class Blowjob extends BasicGame {
             //List<Position> points = Util.interpolate(currentLine.start, currentLine.end, 100);
             currentLine = null;
             //allPoints.add(points);
+
+            //testiä
+            for(Rectangle rectangle : level.buttonHitboxes)
+            {
+                if(x >= rectangle.x && x <= rectangle.width && y >= rectangle.y && y <= rectangle.height ) {
+                System.out.println("OSUI");
+            }
+            }
         }
     }
 
