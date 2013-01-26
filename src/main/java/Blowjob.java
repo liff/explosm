@@ -27,6 +27,7 @@ public class Blowjob extends BasicGame {
     @Override
     public void init(GameContainer gc) throws SlickException {
         resources = new Resources();
+        input = gc.getInput();
         level = new Level(ALLOCATED_TIME, resources);
 
         cutsOverlay = Image.createOffscreenImage(gc.getWidth(), gc.getHeight());
@@ -53,8 +54,6 @@ public class Blowjob extends BasicGame {
                 resources.beat2.play();
             }
         });
-        System.out.println("heart duration is " + player.getBeatDuration());
-        input = gc.getInput();
     }
 
     @Override
@@ -75,9 +74,14 @@ public class Blowjob extends BasicGame {
         g.drawImage(cutsOverlay, 0, 0);
         g.setColor(new Color(255, 255, 255));
         g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
+
+        // jäljellä oleva aika
         g.drawString(level.remainingTimeString(), 0, 0);
+
+        // turhia...
         g.drawString(String.format("%.2f BPM", player.getBPM()), 0, 40);
         g.drawString(String.format("Score: %d", player.getScore()), 0, 60);
+
 
         g.setColor(new Color(255, 255, 255));
         if (currentLine != null) {
@@ -96,7 +100,6 @@ public class Blowjob extends BasicGame {
         for (Position point: points) {
             for (final Image wire: level.wires) {
                 final Color colorUnderPoint = wire.getColor(point.x, point.y);
-                System.out.println(colorUnderPoint);
                 if (colorUnderPoint.getAlpha() != 0 && cutStart == null) {
                     cutStart = point;
                 }
@@ -114,11 +117,11 @@ public class Blowjob extends BasicGame {
     public void mouseReleased(int button, int x, int y) {
         if (currentLine != null) {
             currentLine.end = player.getDisturbedPosition();
-            lines.add(currentLine);
+            //lines.add(currentLine);
             detectCuts(currentLine);
-            List<Position> points = Util.interpolate(currentLine.start, currentLine.end, 100);
+            //List<Position> points = Util.interpolate(currentLine.start, currentLine.end, 100);
             currentLine = null;
-            allPoints.add(points);
+            //allPoints.add(points);
         }
     }
 

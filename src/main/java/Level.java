@@ -14,6 +14,7 @@ public class Level {
     public final List<Image> wires;
     public final Image buttonOverlay;
     public final Image background;
+    public List<Rectangle> buttonHitboxes;
 
     public Level(final long allowedTime, final Resources resources) throws SlickException {
         this.allowedTime = allowedTime;
@@ -64,7 +65,9 @@ public class Level {
         final int margin = 10;
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 3; x++) {
-                g.drawImage(resources.buttonOff, originX + x * (buttonWidth + margin), originY + y * (buttonHeight + margin));
+                int buttonX = originX + x * (buttonWidth + margin);
+                int buttonY = originY + y * (buttonHeight + margin);
+                g.drawImage(resources.buttonOff, buttonX, buttonY);
             }
         }
         g.flush();
