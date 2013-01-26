@@ -24,6 +24,12 @@ public class Blowjob extends BasicGame {
     private double mistakeSpeed = 3.0;
     private int gameState = 1;
 
+    public List<String> consoleText;
+    public StringBuffer stringBufferC;
+    public StringBuffer stringBufferUserInput;
+    public String[] consoleRows;
+    public int consoleRowCurrent;
+
     public Blowjob() throws SlickException {
         super("Blowjob");
     }
@@ -40,8 +46,11 @@ public class Blowjob extends BasicGame {
         cutsG.clear();
         cutsG.setColor(new Color(0, 255, 0));
         desiredButtonStates = new boolean[]{true,true,true,true,true,true,true,true,true,true,true,false};
-
-        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 6.0, BEAT_SIZE);
+        stringBufferC = new StringBuffer("C:\\>");
+        stringBufferUserInput = new StringBuffer("");
+        consoleRows = new String[8];
+        consoleRows[0] = "C:\\>";
+        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 0.0, BEAT_SIZE);
         player = new Player(heart);
         player.addBeatListener(new Heart.BeatListener() {
             public double phase() {
@@ -96,7 +105,9 @@ public class Blowjob extends BasicGame {
         level.clock.draw(g, 50, 55);
         g.setColor(new Color(255, 255, 255));
         g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
-
+        //g.drawString(stringBufferC.toString(), 412, 50);
+            g.setColor(Color.green);
+        drawConsole(g);
         g.setColor(new Color(255, 255, 255));
         if (currentLine != null) {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
@@ -135,6 +146,52 @@ public class Blowjob extends BasicGame {
                 break;
             }
             }
+    }
+    @Override
+    public void keyReleased(int key, char c) {
+        System.out.println("TOIMIIIIII " + key);
+        if(key == 28) {
+            System.out.println("PAINOIT ENTTERIÄ");
+            moveConsoleRows();
+            stringBufferUserInput = new StringBuffer("");
+        }
+        else if(key == 14) {
+            if (stringBufferUserInput.length() > 0) stringBufferUserInput.deleteCharAt(stringBufferUserInput.length()-1);
+        }
+        else {
+            if (stringBufferUserInput.length() < 34) stringBufferUserInput.append(Character.toString(c));
+//          consoleText.add(Character.toString(c));
+            //stringBufferC.append(c);
+        }
+        consoleRows[consoleRowCurrent] = new StringBuffer("C:\\>").append( stringBufferUserInput.toString() ).toString();
+    }
+    public void moveConsoleRows() {
+
+        if (consoleRowCurrent < consoleRows.length-1) {
+            consoleRowCurrent++;
+        }
+        else {
+            for (int i = 1; i < consoleRows.length; i++) {
+                consoleRows[i-1] = consoleRows[i];
+            }
+        }
+        /*
+        String apu = "";
+        String[] helpArray = new String[8];
+        helpArray = consoleRows;
+                 for(int i = 0; i<helpArray.length -1; i++) {
+                         helpArray[i]
+                 }
+        helpArray[helpArray.length] = stringBufferC.toString();
+        consoleRows = helpArray;
+        */
+    }
+
+    public void drawConsole(Graphics g) {
+      //  g.drawString(consoleRows[1], 412, 50);
+        for (int i = 0; i < consoleRows.length; i++) {
+            if (consoleRows[i] != null) g.drawString(consoleRows[i], 412, 40+i*24);
+        }
     }
      //Tasks that are done when a wrong button is pressed
      public void wrongButtonPressed() {
