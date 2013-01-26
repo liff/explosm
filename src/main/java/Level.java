@@ -3,7 +3,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Level {
@@ -17,12 +17,14 @@ public class Level {
     public List<Rectangle> buttonHitboxes;
 
     public Level(final long allowedTime, final Resources resources) throws SlickException {
-        this.allowedTime = allowedTime;
         this.resources = resources;
         this.background = resources.compositedBackground;
         this.wires = resources.wires;
         this.wireOverlay = createWireOverlay();
         this.buttonOverlay = createButtonOverlay();
+
+        this.allowedTime = allowedTime;
+        this.timeRemaining = this.allowedTime;
     }
 
     public void update(final int delta) {
@@ -73,4 +75,25 @@ public class Level {
         g.flush();
         return image;
     }
+
+    public List<Cut> detectCuts(final Line line) {
+        final List<Cut> newCuts = new LinkedList<Cut>();
+        List<Position> points = Util.interpolate(line.start, line.end, 100);
+        Position cutStart = null;
+        for (Position point: points) {
+            for (final Image wire: wires) {
+                final Color colorUnderPoint = wire.getColor(point.x, point.y);
+                if (colorUnderPoint.getAlpha() != 0 && cutStart == null) {
+                    cutStart = point;
+                }
+                else if (colorUnderPoint.getAlpha() == 0 && cutStart != null) {
+                    final Cut cut = new Cut(cutStart.copy(), point.copy());
+                    newCuts.add(cut);
+                    cutStart = null;
+                }
+            }
+        }
+        return newCuts;
+    }
+
 }
