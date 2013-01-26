@@ -47,13 +47,32 @@ public class Blowjob extends BasicGame {
         cutsG.clear();
         cutsG.setColor(new Color(0, 255, 0));
 
+        beat1 = new Sound("src/main/resources/beat1.wav");
+
         final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read());
         player = new Player(heart);
-        heart.speed = 6; // XXX
+        player.addBeatListener(new Heart.BeatListener() {
+            public double phase() {
+                return 0;
+            }
+            public void onBeat(final double phase) {
+                System.out.println("phase " + phase);
+                beat1.play();
+            }
+        });
+        player.addBeatListener(new Heart.BeatListener() {
+            public double phase() {
+                return 0.6;
+            }
+            public void onBeat(final double phase) {
+                System.out.println("phase " + phase);
+                beat2.play();
+            }
+        });
+        heart.speed = 10; // XXX
         System.out.println("heart duration is " + player.getBeatDuration());
         input = gc.getInput();
 
-        beat1 = new Sound("src/main/resources/beat1.wav");
         beat2 = new Sound("src/main/resources/beat2.wav");
         double beatDuration = player.getBeatDuration();
 
@@ -90,14 +109,14 @@ public class Blowjob extends BasicGame {
 
 
        if (beatTimer1 <= 0 && beatsPlayed == false) {
-           beat1.play((float)test, 10.0f);
+           //beat1.play((float)test, 10.0f);
            beatTimer1 += player.getBeatDuration(); //tapa minut
        }
 
        beatTimer2 -= delta;
 
        if (beatTimer2 <= 0 && beatsPlayed == false) {
-           beat2.play((float)test2, 10.0f);
+           //beat2.play((float)test2, 10.0f);
            beatTimer2 += player.getBeatDuration(); //lopeta tuskani
        }
 

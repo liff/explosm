@@ -53,4 +53,8 @@ public class Player {
     public int getScore() {
         return score;
     }
+
+    public void addBeatListener(Heart.BeatListener listener) {
+        heart.addBeatListener(listener);
+    }
 }
