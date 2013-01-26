@@ -2,6 +2,7 @@ import org.newdawn.slick.Input;
 
 public class Player {
     public final Heart heart;
+    private int score = 0;
     public int x = 0;
     public int y = 0;
 
@@ -18,7 +19,7 @@ public class Player {
         setPosition(input.getMouseX(), input.getMouseY());
     }
 
-    public Position getDistrubedPosition() {
+    public Position getDisturbedPosition() {
         final double dx = 0;
         final double dy = heart.getAdjustment();
         return new Position(this.x + (int)dx, this.y + (int)dy);
@@ -43,5 +44,13 @@ public class Player {
 
     public double getBPM() {
         return heart.getBPM();
+    }
+
+    public void increaseScore() {
+        score += 1;
+    }
+
+    public int getScore() {
+        return score;
     }
 }

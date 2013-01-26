@@ -7,17 +7,17 @@ public class Blowjob extends BasicGame {
     private static final int MIN_FRAME_RATE = 10;
     private static final int ALLOCATED_TIME = 3 * 60 * 1000 + 6000;
 
+    private Resources resources;
     private Player player;
+    private Level level;
     private final List<Line> lines;
     private final List<List<Position>> allPoints;
     private Line currentLine;
-    private long timeRemaining;
+    private List<Cut> cuts;
+    private Input input;
+    private Image cutsOverlay;
     private long timeFlown;
     private long timeBetweenBeats;
-    private Image background;
-    private Color backgroundColor;
-    private List<Position> cuts;
-    private Input input;
     private Sound beat1;
     private Sound beat2;
     private double beatTimer1;
@@ -33,19 +33,26 @@ public class Blowjob extends BasicGame {
         super("Blowjob");
         lines = new LinkedList<Line>();
         allPoints = new LinkedList<List<Position>>();
-        cuts = new LinkedList<Position>();
-        timeRemaining = ALLOCATED_TIME;
+        cuts = new LinkedList<Cut>();
     }
 
     @Override
     public void init(GameContainer gc) throws SlickException {
+        resources = new Resources();
+        level = new Level(ALLOCATED_TIME, resources);
+
+        cutsOverlay = Image.createOffscreenImage(gc.getWidth(), gc.getHeight());
+        final Graphics cutsG = cutsOverlay.getGraphics();
+        cutsG.setBackground(Color.transparent);
+        cutsG.clear();
+        cutsG.setColor(new Color(0, 255, 0));
+
         final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read());
         player = new Player(heart);
         heart.speed = 6; // XXX
         System.out.println("heart duration is " + player.getBeatDuration());
         input = gc.getInput();
-        background = new Image("src/main/resources/testi.png");
-        backgroundColor = background.getColor(5, 5);
+
         beat1 = new Sound("src/main/resources/beat1.wav");
         beat2 = new Sound("src/main/resources/beat2.wav");
         double beatDuration = player.getBeatDuration();
@@ -65,16 +72,16 @@ public class Blowjob extends BasicGame {
         //beat2.loop((float)test, 10.0f);
 
         beatsPlayed = false;
-
     }
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
-        timeRemaining -= delta;
+        level.update(delta);
         player.setPositionAndUpdate(input, delta);
         if (currentLine != null) {
-            currentLine.end = player.getDistrubedPosition();
+            currentLine.end = player.getDisturbedPosition();
         }
+        applyCuts();
 
         timeFlown += delta;
 
@@ -100,37 +107,22 @@ public class Blowjob extends BasicGame {
        //
        // }
 
-    }
 
-    private long remainingMinutes() {
-        return timeRemaining / 1000 / 60;
-    }
-
-    private long remainingSeconds() {
-        return (timeRemaining - (remainingMinutes() * 1000 * 60)) / 1000;
-    }
-
-    private long remainingTenths() {
-        return (timeRemaining - (remainingSeconds() * 1000) - (remainingMinutes() * 1000 * 60)) / 100;
     }
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        g.drawImage(background, 0, 0);
-        g.drawString("sakset", player.getDistrubedPosition().x, player.getDistrubedPosition().y);
-        g.drawString(String.format("%02d:%02d.%d", remainingMinutes(), remainingSeconds(), remainingTenths()), 0, 0);
+        g.drawImage(level.background, 0, 0);
+        g.drawImage(level.wireOverlay, 0, 0);
+        g.drawImage(level.buttonOverlay, 0, 0);
+        g.drawImage(cutsOverlay, 0, 0);
+        g.setColor(new Color(255, 255, 255));
+        g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
+        g.drawString(level.remainingTimeString(), 0, 0);
         g.drawString(String.format("%.2f BPM", player.getBPM()), 0, 40);
-        //for (Line line: lines) {
-        //    g.drawLine(line.start.x, line.start.y, line.end.x, line.end.y);
-        //}
-        for (List<Position> points: allPoints) {
-            for (Position point: points) {
-                g.drawOval(point.x - 1, point.y - 1, 2, 2);
-            }
-        }
-        for (Position cut: cuts) {
-            g.drawOval(cut.x - 3, cut.y - 3, 12, 12);
-        }
+        g.drawString(String.format("Score: %d", player.getScore()), 0, 60);
+
+        g.setColor(new Color(255, 255, 255));
         if (currentLine != null) {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
         }
@@ -138,24 +130,25 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void mousePressed(int button, int x, int y) {
-        currentLine = new Line(player.getDistrubedPosition(), player.getDistrubedPosition());
+        currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
     }
 
     private void detectCuts(final Line line) {
         List<Position> points = Util.interpolate(line.start, line.end, 100);
         Position cutStart = null;
         for (Position point: points) {
-            Color color = background.getColor(point.x, point.y);
-            if (!color.equals(backgroundColor)) {
-                cutStart = point;
-            }
-            else if (cutStart != null) {
-                final List<Position> cutPoints = Util.interpolate(cutStart, point, 3);
-                final Position middle = cutPoints.get(1);
-                System.out.println("cut at " + middle);
-                System.out.println("c " + color + " b" + backgroundColor);
-                cuts.add(middle);
-                cutStart = null;
+            for (final Image wire: level.wires) {
+                final Color colorUnderPoint = wire.getColor(point.x, point.y);
+                System.out.println(colorUnderPoint);
+                if (colorUnderPoint.getAlpha() != 0 && cutStart == null) {
+                    cutStart = point;
+                }
+                else if (colorUnderPoint.getAlpha() == 0 && cutStart != null) {
+                    final Cut cut = new Cut(cutStart.copy(), point.copy());
+                    cuts.add(cut);
+                    player.increaseScore();
+                    cutStart = null;
+                }
             }
         }
     }
@@ -163,7 +156,7 @@ public class Blowjob extends BasicGame {
     @Override
     public void mouseReleased(int button, int x, int y) {
         if (currentLine != null) {
-            currentLine.end = player.getDistrubedPosition();
+            currentLine.end = player.getDisturbedPosition();
             lines.add(currentLine);
             detectCuts(currentLine);
             List<Position> points = Util.interpolate(currentLine.start, currentLine.end, 100);
@@ -178,6 +171,15 @@ public class Blowjob extends BasicGame {
 
     private static double getMaximumFrameTime() {
         return 1000.0 / MIN_FRAME_RATE;
+    }
+
+    private void applyCuts() throws SlickException {
+        final Graphics cutsG = cutsOverlay.getGraphics();
+        for (Cut cut: cuts) {
+            cutsG.fillOval(cut.start.x, cut.start.y, cut.width, cut.height);
+        }
+        cutsG.flush();
+        cuts.clear();
     }
 
     public static void main(String[] args) throws SlickException {
