@@ -6,6 +6,7 @@ public class Blowjob extends BasicGame {
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
     private static final int ALLOCATED_TIME = 3 * 60 * 1000 + 6000;
+    private static final int BEAT_SIZE = 50;
 
     private Resources resources;
     private Player player;
@@ -31,7 +32,7 @@ public class Blowjob extends BasicGame {
         cutsG.clear();
         cutsG.setColor(new Color(0, 255, 0));
 
-        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 10.0);
+        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 10.0, BEAT_SIZE);
         player = new Player(heart);
         player.addBeatListener(new Heart.BeatListener() {
             public double phase() {
@@ -97,14 +98,10 @@ public class Blowjob extends BasicGame {
             currentLine.end = player.getDisturbedPosition();
             pendingCuts = level.detectCuts(currentLine);
             currentLine = null;
-            //allPoints.add(points);
-
-            //testiä
-            for(Rectangle rectangle : level.buttonHitboxes)
-            {
-                if(x >= rectangle.x && x <= rectangle.width && y >= rectangle.y && y <= rectangle.height ) {
+        }
+        for(Rectangle rectangle: level.buttonHitboxes) {
+            if(x >= rectangle.x && x <= rectangle.endX && y >= rectangle.y && y <= rectangle.endY) {
                 System.out.println("OSUI");
-            }
             }
         }
     }

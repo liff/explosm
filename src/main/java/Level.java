@@ -3,6 +3,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,8 +85,8 @@ public class Level {
         final List<Cut> newCuts = new LinkedList<Cut>();
         List<Position> points = Util.interpolate(line.start, line.end, 100);
         Position cutStart = null;
-        for (Position point: points) {
-            for (final Image wire: wires) {
+        for (final Image wire: wires) {
+            for (Position point: points) {
                 final Color colorUnderPoint = wire.getColor(point.x, point.y);
                 if (colorUnderPoint.getAlpha() != 0 && cutStart == null) {
                     cutStart = point;
