@@ -21,6 +21,7 @@ public class Resources {
     public final List<Image> wires;
     public final Sound beat1;
     public final Sound beat2;
+    public final Sound buttonClick;
     public final Image[] digits;
     public final Image colon;
 
@@ -37,6 +38,7 @@ public class Resources {
             compositedBackground = createCompositedBackground();
             beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
             beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));
+            buttonClick = new Sound((URLDecoder.decode(ResourceLoader.getResource("click_maybe.wav").getPath(), "UTF-8")));
             digits = new Image[10];
             for (int i = 0; i < 10; i++) {
                 digits[i] = new Image(URLDecoder.decode(ResourceLoader.getResource(i + ".png").getPath(), "UTF-8"));

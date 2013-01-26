@@ -12,11 +12,15 @@ public class Blowjob extends BasicGame {
 
     private Resources resources;
     private Player player;
+    private Heart heart;
     private Level level;
     private Line currentLine;
     private Input input;
     private Image cutsOverlay;
     private List<Cut> pendingCuts;
+    private boolean[] desiredButtonStates;
+
+    private double mistakeSpeed = 3.0;
 
     public Blowjob() throws SlickException {
         super("Blowjob");
@@ -33,8 +37,9 @@ public class Blowjob extends BasicGame {
         cutsG.setBackground(Color.transparent);
         cutsG.clear();
         cutsG.setColor(new Color(0, 255, 0));
+        desiredButtonStates = new boolean[]{true,true,true,true,true,true,true,true,true,true,true,false};
 
-        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 0.0, BEAT_SIZE);
+        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 6.0, BEAT_SIZE);
         player = new Player(heart);
         player.addBeatListener(new Heart.BeatListener() {
             public double phase() {
@@ -99,8 +104,22 @@ public class Blowjob extends BasicGame {
                 System.out.println("indeksi: " + index);
                 try {
                     level.toggleButton(index);
+                    if(level.buttonStates[index] != desiredButtonStates[index]) wrongButtonPressed();
+                    resources.buttonClick.play(1.0f, 1.0f);
                 } catch (SlickException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
+
+
+                for(int i = 0; i<level.buttonStates.length; i++) {
+
+                    if(level.buttonStates[i] != desiredButtonStates[i]) {
+
+                        break;
+                    }
+
+                    if(i >= level.buttonStates.length -1) correctButtonCombination();
                 }
                 break;
             }
@@ -109,7 +128,19 @@ public class Blowjob extends BasicGame {
 
 
     }
+     //Tasks that are done when a wrong button is pressed
+     public void wrongButtonPressed() {
+         System.out.println("RÄJÄHTI");
+         double heartSpeed = heart.getSpeed();
+         heart.setSpeed(heartSpeed+ mistakeSpeed);
 
+
+
+     }
+    //Tasks that are done when player enters correct button combination
+    public void correctButtonCombination() {
+        System.out.println("OIKEA YHDISTELMÄ");
+    }
     @Override
     public void mouseReleased(int button, int x, int y) {
         if (currentLine != null) {

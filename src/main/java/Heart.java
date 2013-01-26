@@ -79,4 +79,8 @@ public class Heart {
         speed = newSpeed;
         epsilon = (speed + 2) / this.points.size();
     }
+
+    public double getSpeed() {
+              return this.speed;
+    }
 }

@@ -40,6 +40,7 @@ public class Player {
 
     public double getBeatDuration() {
         return heart.getBeatDuration();
+
     }
 
     public double getBPM() {
