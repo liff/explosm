@@ -33,8 +33,8 @@ public class Resources {
             sticker = new Image(URLDecoder.decode(ResourceLoader.getResource("sticker.png").getPath(), "UTF-8"));
             wires = loadWires();
             compositedBackground = createCompositedBackground();
-            beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1.wav").getPath(), "UTF-8"));
-            beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2.wav").getPath(), "UTF-8"));
+            beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
+            beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));
         }
         catch (UnsupportedEncodingException e) {
             throw new SlickException("PLAH", e);

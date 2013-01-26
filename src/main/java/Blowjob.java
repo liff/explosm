@@ -42,7 +42,7 @@ public class Blowjob extends BasicGame {
                 return 0;
             }
             public void onBeat(final double phase) {
-                resources.beat1.play(1.0f, 1.0f);
+                resources.beat1.play(1.0f, 0.5f);
             }
         });
         player.addBeatListener(new Heart.BeatListener() {
@@ -50,7 +50,7 @@ public class Blowjob extends BasicGame {
                 return 0.4;
             }
             public void onBeat(final double phase) {
-                resources.beat2.play();
+                resources.beat2.play(1.0f, 0.5f);
             }
         });
         System.out.println("heart duration is " + player.getBeatDuration());
