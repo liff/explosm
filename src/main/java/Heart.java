@@ -22,22 +22,19 @@ public class Heart {
         public double phase();
         public void onBeat(double phase);
     }
-    private final double EPSILON = 0.05;
     private final double frameTime;
-    private double time;
     private List<Double> points;
-    public double speed;
+    private double epsilon;
+    private double speed;
     private int index;
-    private int previousIndex;
     private List<BeatListenerEntry> beatListeners;
 
-    public Heart(final double frameTime, List<Double> points) {
+    public Heart(final double frameTime, final List<Double> points, final double initialSpeed) {
         this.frameTime = frameTime;
-        this.time = 0.0;
         this.points = points;
-        this.speed = 1.0;
-        this.index = this.previousIndex = 0;
+        this.index = 0;
         this.beatListeners = new ArrayList<BeatListenerEntry>();
+        this.setSpeed(initialSpeed);
     }
 
     public void addBeatListener(final BeatListener listener) {
@@ -53,10 +50,7 @@ public class Heart {
     }
 
     public void update(final int delta) {
-        final double inc = speed * frameTime / (double)delta;
-        time += speed * frameTime / (double)delta;
-        previousIndex = index;
-        index += inc;
+        index += speed * frameTime / (double)delta;;
         if (index >= points.size()) {
             index = 0;
             for (final BeatListenerEntry listener: beatListeners) {
@@ -64,7 +58,7 @@ public class Heart {
             }
         }
         for (final BeatListenerEntry listener: beatListeners) {
-            if (!listener.triggeredOnThisBeat && Math.abs(getPhase() - listener.phase()) <= EPSILON) {
+            if (!listener.triggeredOnThisBeat && Math.abs(getPhase() - listener.phase()) <= epsilon) {
                 listener.triggeredOnThisBeat = true;
                 listener.onBeat(getPhase());
             }
@@ -77,5 +71,10 @@ public class Heart {
 
     public double getBPM() {
         return 60.0 * (1 / (getBeatDuration() / 1000.0));
+    }
+
+    public void setSpeed(final double newSpeed) {
+        speed = newSpeed;
+        epsilon = (speed + 2) / this.points.size();
     }
 }
