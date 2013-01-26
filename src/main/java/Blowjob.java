@@ -10,18 +10,13 @@ public class Blowjob extends BasicGame {
     private Resources resources;
     private Player player;
     private Level level;
-    private final List<Line> lines;
-    private final List<List<Position>> allPoints;
     private Line currentLine;
-    private List<Cut> cuts;
     private Input input;
     private Image cutsOverlay;
+    private List<Cut> pendingCuts;
 
     public Blowjob() throws SlickException {
         super("Blowjob");
-        lines = new LinkedList<Line>();
-        allPoints = new LinkedList<List<Position>>();
-        cuts = new LinkedList<Cut>();
     }
 
     @Override
@@ -63,7 +58,10 @@ public class Blowjob extends BasicGame {
         if (currentLine != null) {
             currentLine.end = player.getDisturbedPosition();
         }
-        applyCuts();
+        if (pendingCuts != null) {
+            applyCuts(pendingCuts);
+            pendingCuts = null;
+        }
     }
 
     @Override
@@ -94,32 +92,11 @@ public class Blowjob extends BasicGame {
         currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
     }
 
-    private void detectCuts(final Line line) {
-        List<Position> points = Util.interpolate(line.start, line.end, 100);
-        Position cutStart = null;
-        for (Position point: points) {
-            for (final Image wire: level.wires) {
-                final Color colorUnderPoint = wire.getColor(point.x, point.y);
-                if (colorUnderPoint.getAlpha() != 0 && cutStart == null) {
-                    cutStart = point;
-                }
-                else if (colorUnderPoint.getAlpha() == 0 && cutStart != null) {
-                    final Cut cut = new Cut(cutStart.copy(), point.copy());
-                    cuts.add(cut);
-                    player.increaseScore();
-                    cutStart = null;
-                }
-            }
-        }
-    }
-
     @Override
     public void mouseReleased(int button, int x, int y) {
         if (currentLine != null) {
             currentLine.end = player.getDisturbedPosition();
-            //lines.add(currentLine);
-            detectCuts(currentLine);
-            //List<Position> points = Util.interpolate(currentLine.start, currentLine.end, 100);
+            pendingCuts = level.detectCuts(currentLine);
             currentLine = null;
             //allPoints.add(points);
 
@@ -141,13 +118,12 @@ public class Blowjob extends BasicGame {
         return 1000.0 / MIN_FRAME_RATE;
     }
 
-    private void applyCuts() throws SlickException {
+    private void applyCuts(List<Cut> cuts) throws SlickException {
         final Graphics cutsG = cutsOverlay.getGraphics();
         for (Cut cut: cuts) {
             cutsG.fillOval(cut.start.x, cut.start.y, cut.width, cut.height);
         }
         cutsG.flush();
-        cuts.clear();
     }
 
     public static void main(String[] args) throws SlickException {
