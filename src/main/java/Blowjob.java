@@ -7,7 +7,8 @@ import java.util.List;
 public class Blowjob extends BasicGame {
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
-    private static final int ALLOCATED_TIME = 3 * 60 * 1000 + 6000;
+    private static final int ALLOCATED_TIME = 1000000;
+            //3 * 60 * 1000 + 6000;
     private static final int BEAT_SIZE = 50;
 
     private Resources resources;
@@ -21,6 +22,7 @@ public class Blowjob extends BasicGame {
     private boolean[] desiredButtonStates;
 
     private double mistakeSpeed = 3.0;
+    private int gameState = 1;
 
     public Blowjob() throws SlickException {
         super("Blowjob");
@@ -63,6 +65,10 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
+        if(gameState == 1) {
+        if(level.getClockRunning() == false) gameState = 2;
+        }
+        if(gameState == 1) {
         level.update(delta);
         player.setPositionAndUpdate(input, delta);
         if (currentLine != null) {
@@ -72,10 +78,17 @@ public class Blowjob extends BasicGame {
             applyCuts(pendingCuts);
             pendingCuts = null;
         }
+        }
+
+        if(gameState == 2) {
+            gameEnded();
+            gameState = 3;
+        }
     }
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
+        if(gameState == 1 ) {
         g.drawImage(level.background, 0, 0);
         g.drawImage(level.wireOverlay, 0, 0);
         g.drawImage(level.buttonOverlay, 0, 0);
@@ -89,7 +102,7 @@ public class Blowjob extends BasicGame {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
         }
 
-
+        }
     }
 
     @Override
@@ -110,8 +123,6 @@ public class Blowjob extends BasicGame {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
 
-
-
                 for(int i = 0; i<level.buttonStates.length; i++) {
 
                     if(level.buttonStates[i] != desiredButtonStates[i]) {
@@ -123,10 +134,7 @@ public class Blowjob extends BasicGame {
                 }
                 break;
             }
-
             }
-
-
     }
      //Tasks that are done when a wrong button is pressed
      public void wrongButtonPressed() {
@@ -140,6 +148,15 @@ public class Blowjob extends BasicGame {
     //Tasks that are done when player enters correct button combination
     public void correctButtonCombination() {
         System.out.println("OIKEA YHDISTELMÄ");
+    }
+
+    public void stopGame() {
+        gameState = 0;
+    }
+
+    //What happens when game ends is handled here
+    public void gameEnded() {
+              System.out.println("PELI LOPPUI");
     }
     @Override
     public void mouseReleased(int button, int x, int y) {

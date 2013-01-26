@@ -24,6 +24,10 @@ public class Resources {
     public final Sound buttonClick;
     public final Image[] digits;
     public final Image colon;
+    public final Image controller1;
+    public final Image controller2;
+    public final Image scale;
+
 
     public Resources() throws SlickException {
         try {
@@ -35,6 +39,9 @@ public class Resources {
             connectors = new Image(URLDecoder.decode(ResourceLoader.getResource("connectors.png").getPath(), "UTF-8"));
             sticker = new Image(URLDecoder.decode(ResourceLoader.getResource("sticker.png").getPath(), "UTF-8"));
             wires = loadWires();
+            controller1 = new Image(URLDecoder.decode(ResourceLoader.getResource("ylempisaadin.png").getPath(), "UTF-8"));
+            controller2 = new Image(URLDecoder.decode(ResourceLoader.getResource("alempisaadin.png").getPath(), "UTF-8"));
+            scale = new Image(URLDecoder.decode(ResourceLoader.getResource("asteikko.png").getPath(), "UTF-8"));
             compositedBackground = createCompositedBackground();
             beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
             beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));
@@ -58,14 +65,25 @@ public class Resources {
         g.drawImage(panelBackground, 0, 0);
         g.drawImage(connectors, 0, 0);
         g.drawImage(sticker, 0, 0);
+        g.drawImage(controller1, 0, 0);
+        g.drawImage(controller2, 0, 0);
+        g.drawImage(scale, 0,0);
         g.flush();
         return image;
     }
 
     private List<Image> loadWires() throws SlickException {
         final List<Image> images = new ArrayList<Image>();
-        images.add(new Image(ResourceLoader.getResource("wire1.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("wire2.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j10.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j9.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j8.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j7.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j6.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j5.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j4.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j3.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j2.png").getFile()));
+        images.add(new Image(ResourceLoader.getResource("j1.png").getFile()));
         return images;
     }
 }

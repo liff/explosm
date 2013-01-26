@@ -19,6 +19,9 @@ public class Level {
     public boolean[] buttonStates;
     public List<Cut> allCuts;
 
+    public boolean clockRunning = true;
+
+
     public Level(final long allowedTime, final Resources resources) throws SlickException {
         this.resources = resources;
         this.background = resources.compositedBackground;
@@ -33,8 +36,12 @@ public class Level {
 
         this.allowedTime = allowedTime;
         this.clock = new Clock(resources, this.allowedTime);
-    }
 
+
+    }
+    public boolean getClockRunning() {
+        return clockRunning;
+    }
     public void recreate() throws SlickException{
         this.buttonOverlay = createButtonOverlay();
     }
@@ -45,9 +52,16 @@ public class Level {
     }
 
     public void update(final int delta) {
-        clock.decrement(delta);
+         if(clockRunning) clock.decrement(delta);
+        if(clock.remainingMinutes() == 0 && clock.remainingSeconds() == 0 && clock.remainingTenths() == 0) {
+          clockRunning = false;
+
+        }
     }
 
+    public void stopLevel() {
+        clockRunning = false;
+    }
     private long remainingMinutes() {
         return clock.remainingMinutes();
     }
