@@ -6,11 +6,11 @@ import org.newdawn.slick.SlickException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 
 public class Level {
     public final long allowedTime;
     public long timeRemaining;
+    public Clock clock;
     private final Resources resources;
     public final Image wireOverlay;
     public final List<Image> wires;
@@ -29,6 +29,7 @@ public class Level {
 
         this.allowedTime = allowedTime;
         this.timeRemaining = this.allowedTime;
+        this.clock = new Clock(resources, this.timeRemaining);
     }
 
     public void toggleButton(int buttonNumber) {
@@ -37,6 +38,7 @@ public class Level {
 
     public void update(final int delta) {
         timeRemaining -= delta;
+        clock.decrement(delta);
     }
 
     private long remainingMinutes() {
@@ -70,8 +72,8 @@ public class Level {
         final Graphics g = image.getGraphics();
         final int originX = 30;
         final int originY = 345;
-        final int buttonWidth = resources.buttonOn.getWidth();
-        final int buttonHeight = resources.buttonOn.getHeight();
+        final int buttonWidth = resources.buttonOff.getWidth();
+        final int buttonHeight = resources.buttonOff.getHeight();
         final int margin = 10;
         //Rectangle rectangle = new Rectangle(buttonX,buttonY,buttonWidth, buttonHeight);
         Rectangle rectangle = new Rectangle(0,0,0,0);
@@ -107,5 +109,4 @@ public class Level {
         }
         return newCuts;
     }
-
 }

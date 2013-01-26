@@ -71,6 +71,7 @@ public class Blowjob extends BasicGame {
         g.drawImage(level.wireOverlay, 0, 0);
         g.drawImage(level.buttonOverlay, 0, 0);
         g.drawImage(cutsOverlay, 0, 0);
+        level.clock.draw(g, 50, 55);
         g.setColor(new Color(255, 255, 255));
         g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
 
