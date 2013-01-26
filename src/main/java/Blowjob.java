@@ -1,4 +1,6 @@
 import org.newdawn.slick.*;
+import org.newdawn.slick.util.DefaultLogSystem;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,12 +34,13 @@ public class Blowjob extends BasicGame {
         cutsG.clear();
         cutsG.setColor(new Color(0, 255, 0));
 
-        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 10.0, BEAT_SIZE);
+        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 0.0, BEAT_SIZE);
         player = new Player(heart);
         player.addBeatListener(new Heart.BeatListener() {
             public double phase() {
                 return 0;
             }
+
             public void onBeat(final double phase) {
                 resources.beat1.play(1.0f, 0.5f);
             }
@@ -46,6 +49,7 @@ public class Blowjob extends BasicGame {
             public double phase() {
                 return 0.4;
             }
+
             public void onBeat(final double phase) {
                 resources.beat2.play(1.0f, 0.5f);
             }
@@ -87,20 +91,30 @@ public class Blowjob extends BasicGame {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
         }
 
-        for(Rectangle rectangle : level.buttonHitboxes) {
-            g.drawOval(rectangle.x, rectangle.y, 10,10);
-        }
+
     }
 
     @Override
     public void mousePressed(int button, int x, int y) {
         currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
         final Position p = player.getDisturbedPosition();
+        int index = -1;
         for(Rectangle rectangle: level.buttonHitboxes) {
+            index++;
             if(p.x >= rectangle.x && p.x <= rectangle.endX && p.y >= rectangle.y && p.y <= rectangle.endY) {
                 System.out.println("OSUI: " + rectangle);
+                System.out.println("indeksi: " + index);
+                try {
+                    level.toggleButton(index);
+                } catch (SlickException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+                break;
             }
-        }
+
+            }
+
+
     }
 
     @Override

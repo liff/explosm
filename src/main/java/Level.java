@@ -14,7 +14,7 @@ public class Level {
     private final Resources resources;
     public final Image wireOverlay;
     public final List<Image> wires;
-    public final Image buttonOverlay;
+    public Image buttonOverlay;
     public final Image background;
     public List<Rectangle> buttonHitboxes = new ArrayList<Rectangle>();
     public boolean[] buttonStates;
@@ -24,15 +24,19 @@ public class Level {
         this.background = resources.compositedBackground;
         this.wires = resources.wires;
         this.wireOverlay = createWireOverlay();
-        this.buttonOverlay = createButtonOverlay();
         this.buttonStates = new boolean[3 * 4];
+        this.buttonOverlay = createButtonOverlay();
+
 
         this.allowedTime = allowedTime;
         this.timeRemaining = this.allowedTime;
     }
-
-    public void toggleButton(int buttonNumber) {
+    public void recreate() throws SlickException{
+        this.buttonOverlay = createButtonOverlay();
+    }
+    public void toggleButton(int buttonNumber) throws SlickException {
         buttonStates[buttonNumber] = !buttonStates[buttonNumber];
+        this.recreate();
     }
 
     public void update(final int delta) {
@@ -75,13 +79,18 @@ public class Level {
         final int margin = 10;
         //Rectangle rectangle = new Rectangle(buttonX,buttonY,buttonWidth, buttonHeight);
         Rectangle rectangle = new Rectangle(0,0,0,0);
+        int index = 0;
+        buttonHitboxes.clear();
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 3; x++) {
                 int buttonX = originX + x * (buttonWidth + margin);
                 int buttonY = originY + y * (buttonHeight + margin);
                 rectangle = new Rectangle(buttonX,buttonY,buttonWidth, buttonHeight);
                 buttonHitboxes.add(rectangle);
+                if(buttonStates[index] == false) {
                 g.drawImage(resources.buttonOff, buttonX, buttonY);
+                } else g.drawImage(resources.buttonOn, buttonX, buttonY);
+                index++;
             }
         }
         g.flush();
