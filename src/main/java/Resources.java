@@ -27,6 +27,7 @@ public class Resources {
     public final Image controller1;
     public final Image controller2;
     public final Image scale;
+    public final Image instructions;
 
 
     public Resources() throws SlickException {
@@ -42,6 +43,7 @@ public class Resources {
             controller1 = new Image(URLDecoder.decode(ResourceLoader.getResource("ylempisaadin.png").getPath(), "UTF-8"));
             controller2 = new Image(URLDecoder.decode(ResourceLoader.getResource("alempisaadin.png").getPath(), "UTF-8"));
             scale = new Image(URLDecoder.decode(ResourceLoader.getResource("asteikko.png").getPath(), "UTF-8"));
+            instructions = new Image(URLDecoder.decode(ResourceLoader.getResource("paperiohje.png").getPath(), "UTF-8"));
             compositedBackground = createCompositedBackground();
             beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
             beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));
@@ -68,6 +70,7 @@ public class Resources {
         g.drawImage(controller1, 0, 0);
         g.drawImage(controller2, 0, 0);
         g.drawImage(scale, 0,0);
+
         g.flush();
         return image;
     }

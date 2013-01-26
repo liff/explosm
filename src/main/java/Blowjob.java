@@ -30,6 +30,8 @@ public class Blowjob extends BasicGame {
     public String[] consoleRows;
     public int consoleRowCurrent;
 
+    public boolean showMap = false;
+
     public Blowjob() throws SlickException {
         super("Blowjob");
     }
@@ -112,12 +114,15 @@ public class Blowjob extends BasicGame {
         if (currentLine != null) {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
         }
-
+        if(showMap == true) {
+            g.drawImage(resources.instructions,0,0);
+        }
         }
     }
 
     @Override
     public void mousePressed(int button, int x, int y) {
+        if(button == 0) {
         currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
         final Position p = player.getDisturbedPosition();
         int index = -1;
@@ -146,12 +151,17 @@ public class Blowjob extends BasicGame {
                 break;
             }
             }
+        } else {
+        System.out.println("Nappi" + button);
+          showMap = true;
+        }
     }
+
     @Override
     public void keyReleased(int key, char c) {
         System.out.println("TOIMIIIIII " + key);
         if(key == 28) {
-            System.out.println("PAINOIT ENTTERIÄ");
+            System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
             moveConsoleRows();
             stringBufferUserInput = new StringBuffer("");
         }
@@ -222,6 +232,7 @@ public class Blowjob extends BasicGame {
             pendingCuts = level.detectCuts(currentLine);
             currentLine = null;
         }
+        showMap = false;
     }
 
     private void applyCuts(List<Cut> cuts) throws SlickException {

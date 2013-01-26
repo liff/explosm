@@ -74,6 +74,7 @@ public class Level {
         return clock.remainingTenths();
     }
 
+
     private Image createWireOverlay() throws SlickException {
         final Image image = Image.createOffscreenImage(resources.compositedBackground.getWidth(), resources.compositedBackground.getHeight());
         final Graphics g = image.getGraphics();
