@@ -1,4 +1,5 @@
 import org.newdawn.slick.*;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Blowjob extends BasicGame {
@@ -96,6 +97,15 @@ public class Blowjob extends BasicGame {
             currentLine.end = player.getDisturbedPosition();
             pendingCuts = level.detectCuts(currentLine);
             currentLine = null;
+            //allPoints.add(points);
+
+            //testiä
+            for(Rectangle rectangle : level.buttonHitboxes)
+            {
+                if(x >= rectangle.x && x <= rectangle.width && y >= rectangle.y && y <= rectangle.height ) {
+                System.out.println("OSUI");
+            }
+            }
         }
     }
 
