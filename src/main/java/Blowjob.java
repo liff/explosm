@@ -31,7 +31,7 @@ public class Blowjob extends BasicGame {
         cutsG.clear();
         cutsG.setColor(new Color(0, 255, 0));
 
-        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 10.0);
+        final Heart heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 0.0);
         player = new Player(heart);
         player.addBeatListener(new Heart.BeatListener() {
             public double phase() {
@@ -85,6 +85,11 @@ public class Blowjob extends BasicGame {
         if (currentLine != null) {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
         }
+
+
+        for(Rectangle rectangle : level.buttonHitboxes) {
+            g.drawOval(rectangle.x, rectangle.y, 10,10);
+        }
     }
 
     @Override
@@ -94,19 +99,27 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void mouseReleased(int button, int x, int y) {
+
+        System.out.println("player(x,y): " + player.x + ", " + player.y);
+        //testiä
+        for(Rectangle rectangle : level.buttonHitboxes)
+        {
+            //System.out.println(rectangle);
+            if(player.x >= rectangle.x && player.x <= rectangle.endX && player.y >= rectangle.y && player.y <= rectangle.endY ) {
+
+                System.out.println("OSUI: " + rectangle);
+
+
+            }
+        }
+
         if (currentLine != null) {
             currentLine.end = player.getDisturbedPosition();
             pendingCuts = level.detectCuts(currentLine);
             currentLine = null;
             //allPoints.add(points);
 
-            //testiä
-            for(Rectangle rectangle : level.buttonHitboxes)
-            {
-                if(x >= rectangle.x && x <= rectangle.width && y >= rectangle.y && y <= rectangle.height ) {
-                System.out.println("OSUI");
-            }
-            }
+
         }
     }
 

@@ -5,6 +5,7 @@ import org.newdawn.slick.SlickException;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Level {
     public final long allowedTime;

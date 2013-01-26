@@ -15,6 +15,9 @@ public class Rectangle {
         this.endY = y + height;
     }
 
+    public String toString() {
+        return String.format("(%d), (%d), (%d), (%d) ", x, y, width, height );
+    }
     public Rectangle(final Position start, final Position end) {
         this(start.x, start.y, end.x - start.x, end.y - start.y);
     }
