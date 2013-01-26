@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Wire {
-    private final Image image;
+    public final Image image;
 
     public Wire(final Image image) {
         this.image = image;

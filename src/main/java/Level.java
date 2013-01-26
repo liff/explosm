@@ -12,27 +12,33 @@ public class Level {
     public Clock clock;
     private final Resources resources;
     public final Image wireOverlay;
-    public final List<Image> wires;
+    public final List<Wire> wires;
     public Image buttonOverlay;
     public final Image background;
     public List<Rectangle> buttonHitboxes = new ArrayList<Rectangle>();
     public boolean[] buttonStates;
+    public List<Cut> allCuts;
 
     public Level(final long allowedTime, final Resources resources) throws SlickException {
         this.resources = resources;
         this.background = resources.compositedBackground;
-        this.wires = resources.wires;
+        this.wires = new ArrayList<Wire>();
+        for (final Image wireImage: resources.wires) {
+            this.wires.add(new Wire(wireImage));
+        }
+        this.allCuts = new ArrayList<Cut>();
         this.wireOverlay = createWireOverlay();
         this.buttonStates = new boolean[3 * 4];
         this.buttonOverlay = createButtonOverlay();
 
-
         this.allowedTime = allowedTime;
         this.clock = new Clock(resources, this.allowedTime);
     }
+
     public void recreate() throws SlickException{
         this.buttonOverlay = createButtonOverlay();
     }
+
     public void toggleButton(int buttonNumber) throws SlickException {
         buttonStates[buttonNumber] = !buttonStates[buttonNumber];
         this.recreate();
@@ -96,19 +102,20 @@ public class Level {
         final List<Cut> newCuts = new LinkedList<Cut>();
         List<Position> points = Util.interpolate(line.start, line.end, 100);
         Position cutStart = null;
-        for (final Image wire: wires) {
+        for (final Wire wire: wires) {
             for (Position point: points) {
-                final Color colorUnderPoint = wire.getColor(point.x, point.y);
+                final Color colorUnderPoint = wire.image.getColor(point.x, point.y);
                 if (colorUnderPoint.getAlpha() != 0 && cutStart == null) {
                     cutStart = point;
                 }
                 else if (colorUnderPoint.getAlpha() == 0 && cutStart != null) {
-                    final Cut cut = new Cut(cutStart.copy(), point.copy());
+                    final Cut cut = new Cut(wire, cutStart.copy(), point.copy());
                     newCuts.add(cut);
                     cutStart = null;
                 }
             }
         }
+        allCuts.addAll(newCuts);
         return newCuts;
     }
 }
