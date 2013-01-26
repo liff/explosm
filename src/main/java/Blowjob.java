@@ -9,6 +9,7 @@ public class Blowjob extends BasicGame {
     private static final int MIN_FRAME_RATE = 10;
     private static final int ALLOCATED_TIME = 3 * 60 * 1000 + 6000;
 
+    private Resources resources;
     private Player player;
     private Level level;
     private final List<Line> lines;
@@ -28,9 +29,8 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void init(GameContainer gc) throws SlickException {
-        final List<String> wireOverlayFiles = new ArrayList<String>();
-        wireOverlayFiles.add("src/main/resources/wire1.png");
-        level = new Level(ALLOCATED_TIME, "src/main/resources/background.png", wireOverlayFiles);
+        resources = new Resources();
+        level = new Level(ALLOCATED_TIME, resources);
 
         cutsOverlay = Image.createOffscreenImage(gc.getWidth(), gc.getHeight());
         final Graphics cutsG = cutsOverlay.getGraphics();
@@ -59,6 +59,7 @@ public class Blowjob extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.drawImage(level.background, 0, 0);
         g.drawImage(level.wireOverlay, 0, 0);
+        g.drawImage(level.buttonOverlay, 0, 0);
         g.drawImage(cutsOverlay, 0, 0);
         g.setColor(new Color(255, 255, 255));
         g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
@@ -81,7 +82,7 @@ public class Blowjob extends BasicGame {
         List<Position> points = Util.interpolate(line.start, line.end, 100);
         Position cutStart = null;
         for (Position point: points) {
-            for (final Image wire: level.wireOverlays) {
+            for (final Image wire: level.wires) {
                 final Color colorUnderPoint = wire.getColor(point.x, point.y);
                 System.out.println(colorUnderPoint);
                 if (colorUnderPoint.getAlpha() != 0 && cutStart == null) {

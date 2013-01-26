@@ -9,30 +9,19 @@ import java.util.List;
 public class Level {
     public final long allowedTime;
     public long timeRemaining;
-    public final Image background;
-    public final List<Image> wireOverlays;
+    private final Resources resources;
     public final Image wireOverlay;
-    public final Color backgroundColor;
+    public final List<Image> wires;
+    public final Image buttonOverlay;
+    public final Image background;
 
-    public Level(final long allowedTime, final Image background, final List<Image> wireOverlays) throws SlickException {
+    public Level(final long allowedTime, final Resources resources) throws SlickException {
         this.allowedTime = allowedTime;
-        this.background = background;
-        this.wireOverlays = wireOverlays;
-        this.backgroundColor = background.getColor(5, 5);
-        this.wireOverlay = Image.createOffscreenImage(background.getWidth(), background.getHeight());
-        updateWireOverlay();
-    }
-
-    public Level(final long allowedTime, final String backgroundFile, final List<String> wireOverlayFiles) throws SlickException {
-        this(allowedTime, new Image(backgroundFile), loadWireOverlays(wireOverlayFiles));
-    }
-
-    private static List<Image> loadWireOverlays(final List<String> wireOverlayFiles)  throws SlickException {
-        final List<Image> wireOverlayImages = new ArrayList<Image>();
-        for (String wireOverlayFile: wireOverlayFiles) {
-            wireOverlayImages.add(new Image(wireOverlayFile));
-        }
-        return wireOverlayImages;
+        this.resources = resources;
+        this.background = resources.compositedBackground;
+        this.wires = resources.wires;
+        this.wireOverlay = createWireOverlay();
+        this.buttonOverlay = createButtonOverlay();
     }
 
     public void update(final int delta) {
@@ -55,11 +44,30 @@ public class Level {
         return String.format("%02d:%02d.%d", remainingMinutes(), remainingSeconds(), remainingTenths());
     }
 
-    private void updateWireOverlay() throws SlickException {
-        final Graphics g = wireOverlay.getGraphics();
-        for (final Image wire: wireOverlays) {
+    private Image createWireOverlay() throws SlickException {
+        final Image image = Image.createOffscreenImage(resources.compositedBackground.getWidth(), resources.compositedBackground.getHeight());
+        final Graphics g = image.getGraphics();
+        for (final Image wire: resources.wires) {
             g.drawImage(wire, 0, 0);
         }
         g.flush();
+        return image;
+    }
+
+    private Image createButtonOverlay() throws SlickException {
+        final Image image = Image.createOffscreenImage(resources.compositedBackground.getWidth(), resources.compositedBackground.getHeight());
+        final Graphics g = image.getGraphics();
+        final int originX = 30;
+        final int originY = 345;
+        final int buttonWidth = resources.buttonOn.getWidth();
+        final int buttonHeight = resources.buttonOn.getHeight();
+        final int margin = 10;
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 3; x++) {
+                g.drawImage(resources.buttonOff, originX + x * (buttonWidth + margin), originY + y * (buttonHeight + margin));
+            }
+        }
+        g.flush();
+        return image;
     }
 }
