@@ -1,4 +1,5 @@
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -10,6 +11,7 @@ public class Level {
     public long timeRemaining;
     public final Image background;
     public final List<Image> wireOverlays;
+    public final Image wireOverlay;
     public final Color backgroundColor;
 
     public Level(final long allowedTime, final Image background, final List<Image> wireOverlays) throws SlickException {
@@ -17,6 +19,8 @@ public class Level {
         this.background = background;
         this.wireOverlays = wireOverlays;
         this.backgroundColor = background.getColor(5, 5);
+        this.wireOverlay = Image.createOffscreenImage(background.getWidth(), background.getHeight());
+        updateWireOverlay();
     }
 
     public Level(final long allowedTime, final String backgroundFile, final List<String> wireOverlayFiles) throws SlickException {
@@ -49,5 +53,13 @@ public class Level {
 
     public String remainingTimeString() {
         return String.format("%02d:%02d.%d", remainingMinutes(), remainingSeconds(), remainingTenths());
+    }
+
+    private void updateWireOverlay() throws SlickException {
+        final Graphics g = wireOverlay.getGraphics();
+        for (final Image wire: wireOverlays) {
+            g.drawImage(wire, 0, 0);
+        }
+        g.flush();
     }
 }

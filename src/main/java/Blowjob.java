@@ -28,7 +28,9 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void init(GameContainer gc) throws SlickException {
-        level = new Level(ALLOCATED_TIME, "src/main/resources/testi.png", new ArrayList<String>());
+        final List<String> wireOverlayFiles = new ArrayList<String>();
+        wireOverlayFiles.add("src/main/resources/wire1.png");
+        level = new Level(ALLOCATED_TIME, "src/main/resources/background.png", wireOverlayFiles);
 
         cutsOverlay = Image.createOffscreenImage(gc.getWidth(), gc.getHeight());
         final Graphics cutsG = cutsOverlay.getGraphics();
@@ -56,9 +58,7 @@ public class Blowjob extends BasicGame {
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
         g.drawImage(level.background, 0, 0);
-        for (Image wireOverlay: level.wireOverlays) {
-            g.drawImage(wireOverlay, 0, 0);
-        }
+        g.drawImage(level.wireOverlay, 0, 0);
         g.drawImage(cutsOverlay, 0, 0);
         g.setColor(new Color(255, 255, 255));
         g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
@@ -81,15 +81,18 @@ public class Blowjob extends BasicGame {
         List<Position> points = Util.interpolate(line.start, line.end, 100);
         Position cutStart = null;
         for (Position point: points) {
-            Color color = level.background.getColor(point.x, point.y);
-            if (!color.equals(level.backgroundColor) && cutStart == null) {
-                cutStart = point;
-            }
-            else if (color.equals(level.backgroundColor) && cutStart != null) {
-                final Cut cut = new Cut(cutStart.copy(), point.copy());
-                cuts.add(cut);
-                player.increaseScore();
-                cutStart = null;
+            for (final Image wire: level.wireOverlays) {
+                final Color colorUnderPoint = wire.getColor(point.x, point.y);
+                System.out.println(colorUnderPoint);
+                if (colorUnderPoint.getAlpha() != 0 && cutStart == null) {
+                    cutStart = point;
+                }
+                else if (colorUnderPoint.getAlpha() == 0 && cutStart != null) {
+                    final Cut cut = new Cut(cutStart.copy(), point.copy());
+                    cuts.add(cut);
+                    player.increaseScore();
+                    cutStart = null;
+                }
             }
         }
     }
