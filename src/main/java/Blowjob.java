@@ -79,7 +79,6 @@ public class Blowjob extends BasicGame {
         g.drawString(String.format("%.2f BPM", player.getBPM()), 0, 40);
         g.drawString(String.format("Score: %d", player.getScore()), 0, 60);
 
-
         g.setColor(new Color(255, 255, 255));
         if (currentLine != null) {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
@@ -100,20 +99,20 @@ public class Blowjob extends BasicGame {
         }
     }
 
-    private static double getMinimumFrameTime() {
-        return 1000.0 / MAX_FRAME_RATE;
-    }
-
-    private static double getMaximumFrameTime() {
-        return 1000.0 / MIN_FRAME_RATE;
-    }
-
     private void applyCuts(List<Cut> cuts) throws SlickException {
         final Graphics cutsG = cutsOverlay.getGraphics();
         for (Cut cut: cuts) {
             cutsG.fillOval(cut.start.x, cut.start.y, cut.width, cut.height);
         }
         cutsG.flush();
+    }
+
+    private static double getMinimumFrameTime() {
+        return 1000.0 / MAX_FRAME_RATE;
+    }
+
+    private static double getMaximumFrameTime() {
+        return 1000.0 / MIN_FRAME_RATE;
     }
 
     public static void main(String[] args) throws SlickException {
