@@ -11,6 +11,7 @@ public class Resources {
     private final Image clockBackground;
     private final Image panelBackground;
     private final Image connectors;
+    private final Image sticker;
     public final Image buttonOn;
     public final Image buttonOff;
     public final Image compositedBackground;
@@ -23,6 +24,7 @@ public class Resources {
         buttonOn = new Image(ResourceLoader.getResource("button_on.png").getFile());
         buttonOff = new Image(ResourceLoader.getResource("button_off.png").getFile());
         connectors = new Image(ResourceLoader.getResource("connectors.png").getFile());
+        sticker = new Image(ResourceLoader.getResource("sticker.png").getFile());
         wires = loadWires();
         compositedBackground = createCompositedBackground();
     }
@@ -34,6 +36,7 @@ public class Resources {
         g.drawImage(clockBackground, 0, 0);
         g.drawImage(panelBackground, 0, 0);
         g.drawImage(connectors, 0, 0);
+        g.drawImage(sticker, 0, 0);
         g.flush();
         return image;
     }
