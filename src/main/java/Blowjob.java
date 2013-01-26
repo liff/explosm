@@ -75,14 +75,6 @@ public class Blowjob extends BasicGame {
         g.setColor(new Color(255, 255, 255));
         g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
 
-        // jäljellä oleva aika
-        g.drawString(level.remainingTimeString(), 0, 0);
-
-        // turhia...
-        g.drawString(String.format("%.2f BPM", player.getBPM()), 0, 40);
-        g.drawString(String.format("Score: %d", player.getScore()), 0, 60);
-
-
         g.setColor(new Color(255, 255, 255));
         if (currentLine != null) {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);

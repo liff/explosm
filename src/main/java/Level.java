@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Level {
     public final long allowedTime;
-    public long timeRemaining;
     public Clock clock;
     private final Resources resources;
     public final Image wireOverlay;
@@ -28,8 +27,7 @@ public class Level {
         this.buttonStates = new boolean[3 * 4];
 
         this.allowedTime = allowedTime;
-        this.timeRemaining = this.allowedTime;
-        this.clock = new Clock(resources, this.timeRemaining);
+        this.clock = new Clock(resources, this.allowedTime);
     }
 
     public void toggleButton(int buttonNumber) {
@@ -37,24 +35,19 @@ public class Level {
     }
 
     public void update(final int delta) {
-        timeRemaining -= delta;
         clock.decrement(delta);
     }
 
     private long remainingMinutes() {
-        return timeRemaining / 1000 / 60;
+        return clock.remainingMinutes();
     }
 
     private long remainingSeconds() {
-        return (timeRemaining - (remainingMinutes() * 1000 * 60)) / 1000;
+        return clock.remainingSeconds();
     }
 
     private long remainingTenths() {
-        return (timeRemaining - (remainingSeconds() * 1000) - (remainingMinutes() * 1000 * 60)) / 100;
-    }
-
-    public String remainingTimeString() {
-        return String.format("%02d:%02d.%d", remainingMinutes(), remainingSeconds(), remainingTenths());
+        return clock.remainingTenths();
     }
 
     private Image createWireOverlay() throws SlickException {
