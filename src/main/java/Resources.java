@@ -25,6 +25,7 @@ public class Resources {
     public final Sound buttonClick;
     public final Sound consoleBeep;
     public final Sound consoleEnter;
+    public final Sound death;
     public final Music mainMusic;
     public final Image[] digits;
     public final Image colon;
@@ -75,6 +76,7 @@ public class Resources {
             compositedBackground = createCompositedBackground();
             beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
             beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));
+            death = new Sound(URLDecoder.decode(ResourceLoader.getResource("death.wav").getPath(), "UTF-8"));
             consoleBeep = new Sound(URLDecoder.decode(ResourceLoader.getResource("consolekeypress.wav").getPath(), "UTF-8"));
             consoleEnter = new Sound(URLDecoder.decode(ResourceLoader.getResource("console_enter.wav").getPath(), "UTF-8"));
             buttonClick = new Sound((URLDecoder.decode(ResourceLoader.getResource("click_maybe.wav").getPath(), "UTF-8")));
