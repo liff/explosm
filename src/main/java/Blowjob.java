@@ -129,9 +129,9 @@ public class Blowjob extends BasicGame {
                             else
                                 gameOver();
                             break;
-                        case 5:
-                            if (cut.wire == level.greenWire)
-                                level.step = 6;
+                        case 3:
+                            if (cut.wire == level.greenWire && level.upperController.currentAngle <= -53  && level.upperController.currentAngle >= -60)
+                                level.step = 4;
                             else
                                 gameOver();
                             break;
@@ -234,6 +234,7 @@ public class Blowjob extends BasicGame {
         final Controller controller = level.getControllerUnder(position);
         if (controller != null) {
             controller.rotateBy(delta);
+            System.out.println("current angle " + controller.currentAngle);
         }
     }
 
