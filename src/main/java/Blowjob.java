@@ -321,7 +321,10 @@ public class Blowjob extends BasicGame {
             System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
             if(stringBufferUserInput.toString().equalsIgnoreCase("exit"))
                 gameState = STATE_LOSE;
-            if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe") && level.step == 5) {
+            if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe")
+                && getControllerAngle(level.upperController) > 44 && getControllerAngle(level.upperController) < 52
+                && getControllerAngle(level.lowerController) > 44 && getControllerAngle(level.lowerController) < 52
+                && level.step == 5) {
                 level.nextStep();
             }
             else if(stringBufferUserInput.toString().equalsIgnoreCase("Disable_timer.jar") && level.step == 10) {
