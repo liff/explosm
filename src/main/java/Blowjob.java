@@ -8,8 +8,11 @@ public class Blowjob extends BasicGame {
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
     private static final int ALLOCATED_TIME = 1000000;
+    private static final int mapStartLocation = 600;
             //3 * 60 * 1000 + 6000;
     private static final int BEAT_SIZE = 50;
+
+    //HYVÄT KOMMENTIT TEILLÄ!!
 
     private Resources resources;
     private Player player;
@@ -31,7 +34,12 @@ public class Blowjob extends BasicGame {
     public int consoleRowCurrent;
 
     public boolean showMap = false;
+    public boolean lowerMap = false;
+    public int mapX;
+    public int mapY;
+    public int mapSpeed;
 
+    public Image hand;
     public Blowjob() throws SlickException {
         super("Blowjob");
     }
@@ -54,6 +62,10 @@ public class Blowjob extends BasicGame {
         consoleRows[0] = "C:\\>";
         heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 0.0, BEAT_SIZE);
         player = new Player(heart);
+        hand = resources.handResting;
+        mapY = 600;
+
+        mapSpeed = 10;
         player.addBeatListener(new Heart.BeatListener() {
             public double phase() {
                 return 0;
@@ -82,6 +94,16 @@ public class Blowjob extends BasicGame {
         if(gameState == 1) {
         level.update(delta);
         player.setPositionAndUpdate(input, delta);
+
+            if(showMap == true && mapY >= 0) {
+                System.out.println("PÄÄSTIIN TÄNNE");
+
+                mapY = mapY - mapSpeed;
+            }
+            if( lowerMap = true) {
+               // mapY = mapY + mapSpeed;
+            }
+
         if (currentLine != null) {
             currentLine.end = player.getDisturbedPosition();
         }
@@ -89,6 +111,8 @@ public class Blowjob extends BasicGame {
             applyCuts(pendingCuts);
             pendingCuts = null;
         }
+
+
         }
 
         if(gameState == 2) {
@@ -106,16 +130,20 @@ public class Blowjob extends BasicGame {
         g.drawImage(cutsOverlay, 0, 0);
         level.clock.draw(g, 50, 55);
         g.setColor(new Color(255, 255, 255));
-        g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
-        //g.drawString(stringBufferC.toString(), 412, 50);
             g.setColor(Color.green);
-        drawConsole(g);
+            drawConsole(g);
+        //g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
+            g.drawImage(hand, player.getDisturbedPosition().x -187, player.getDisturbedPosition().y -258);
+            //g.drawImage(resources.hand, 0, 0, 0 , ,0 ,10);
+        //g.drawString(stringBufferC.toString(), 412, 50);
+
+
         g.setColor(new Color(255, 255, 255));
         if (currentLine != null) {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
         }
-        if(showMap == true) {
-            g.drawImage(resources.instructions,0,0);
+        if(true) {
+            g.drawImage(resources.instructions,mapX,mapY);
         }
         }
     }
@@ -123,6 +151,7 @@ public class Blowjob extends BasicGame {
     @Override
     public void mousePressed(int button, int x, int y) {
         if(button == 0) {
+            hand = resources.hand;
         currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
         final Position p = player.getDisturbedPosition();
         int index = -1;
@@ -227,12 +256,16 @@ public class Blowjob extends BasicGame {
     }
     @Override
     public void mouseReleased(int button, int x, int y) {
+        if(button == 0) {
+            hand = resources.handResting;
+        }
         if (currentLine != null) {
             currentLine.end = player.getDisturbedPosition();
             pendingCuts = level.detectCuts(currentLine);
             currentLine = null;
         }
         showMap = false;
+        mapY = mapStartLocation;
     }
 
     private void applyCuts(List<Cut> cuts) throws SlickException {
