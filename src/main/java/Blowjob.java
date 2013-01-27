@@ -1,13 +1,11 @@
 import org.newdawn.slick.*;
-import org.newdawn.slick.util.DefaultLogSystem;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class Blowjob extends BasicGame {
     private static final int STATE_MENU = 0;
     private static final int STATE_GAME = 1;
-    private static final int STATE_END  = 2;
+    private static final int STATE_LOSE = 2;
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
     private static final int ALLOCATED_TIME = 1000000;
@@ -101,7 +99,7 @@ public class Blowjob extends BasicGame {
 
             if(level.getClockRunning() == false) {
                 System.out.println("AIKA LOPPUI");
-                gameState = STATE_END;
+                gameState = STATE_LOSE;
             }
             level.update(delta);
             player.setPositionAndUpdate(input, delta);
@@ -119,6 +117,49 @@ public class Blowjob extends BasicGame {
             }
             if (pendingCuts != null) {
                 applyCuts(pendingCuts);
+                for (Cut cut: pendingCuts) {
+                    System.out.println("cut " + cut + " step " + level.step + " result " + cut.wire);
+                    switch (level.step) {
+                        case 1:
+                            if (cut.wire == level.lowestRedWire)
+                                level.step = 2;
+                            else
+                                gameOver();
+                            break;
+                        case 2:
+                            if (cut.wire == level.blackWire)
+                                level.step = 3;
+                            else
+                                gameOver();
+                            break;
+                        case 5:
+                            if (cut.wire == level.greenWire)
+                                level.step = 6;
+                            else
+                                gameOver();
+                            break;
+                        case 15:
+                            if (cut.wire == level.yellowWire)
+                                level.step = 16;
+                            else
+                                gameOver();
+                            break;
+                        case 17:
+                            if (cut.wire == level.pinkWire)
+                                level.step = 18;
+                            else
+                                gameOver();
+                            break;
+                        case 18:
+                            if (cut.wire == level.fatBlueWire)
+                                level.step = 19;
+                            else
+                                gameOver();
+                            break;
+                        default:
+                            gameOver();
+                    }
+                }
                 pendingCuts = null;
             }
         }
@@ -126,10 +167,14 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        if(gameState == STATE_END) {
+        if(gameState == STATE_LOSE) {
             drawGameOver(gc, g);
         }
-        if(gameState == STATE_MENU) drawMainMenu(gc,g);
+
+        if(gameState == STATE_MENU) {
+            drawMainMenu(gc,g);
+        }
+
         if(gameState == STATE_GAME ) {
             gc.setMouseGrabbed(true);
             g.drawImage(level.background, 0, 0);
@@ -164,6 +209,11 @@ public class Blowjob extends BasicGame {
     }
     public void bombDefused(GameContainer gc, Graphics g) {
         g.drawString("BOMB DEFUSED", 300, 100);
+    }
+
+
+    public void gameOver() {
+        gameState = STATE_LOSE;
     }
 
     public void drawGameOver(GameContainer gc, Graphics g) {
@@ -203,7 +253,7 @@ public class Blowjob extends BasicGame {
                    music.loop();
                }
             if(x >= quitGameHitBoxes.x && x <= quitGameHitBoxes.endX && y >= quitGameHitBoxes.y && y <= quitGameHitBoxes.endY) {
-                gameState = STATE_END;
+                gameState = STATE_LOSE;
             }
         }
         if(button == 0 && gameState == STATE_GAME) {
@@ -259,7 +309,7 @@ public class Blowjob extends BasicGame {
             resources.consoleEnter.play(1.0f, 0.1f);
             System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
             if(stringBufferUserInput.toString().equalsIgnoreCase("exit"))
-                gameState = STATE_END;
+                gameState = STATE_LOSE;
             if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe")) {
                 System.out.println("päästiin tänne");
                 System.out.println(stringBufferUserInput.toString());
@@ -296,16 +346,6 @@ public class Blowjob extends BasicGame {
                 consoleRows[i-1] = consoleRows[i];
             }
         }
-        /*
-        String apu = "";
-        String[] helpArray = new String[8];
-        helpArray = consoleRows;
-                 for(int i = 0; i<helpArray.length -1; i++) {
-                         helpArray[i]
-                 }
-        helpArray[helpArray.length] = stringBufferC.toString();
-        consoleRows = helpArray;
-        */
     }
 
     public void drawConsole(Graphics g) {
