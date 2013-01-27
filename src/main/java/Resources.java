@@ -26,6 +26,7 @@ public class Resources {
     public final Sound consoleBeep;
     public final Sound consoleEnter;
     public final Sound death;
+    public final Sound winSound;
     public final Music mainMusic;
     public final Image[] digits;
     public final Image colon;
@@ -40,6 +41,7 @@ public class Resources {
     public final Image logo;
     public final Image mainMenuBG;
     public final Image gameOver;
+    public final Image win;
     public Image lowestRedWire;
     public Image blackWire;
     public Image greenWire;
@@ -73,6 +75,8 @@ public class Resources {
             logo = new Image(URLDecoder.decode(ResourceLoader.getResource("logo.png").getPath(), "UTF-8"));
             mainMenuBG = new Image(URLDecoder.decode(ResourceLoader.getResource("tausta2.png").getPath(), "UTF-8"));
             gameOver = new Image(URLDecoder.decode(ResourceLoader.getResource("gameover.png").getPath(), "UTF-8"));
+            win = new Image(URLDecoder.decode(ResourceLoader.getResource("voitto.png").getPath(), "UTF-8"));
+            winSound = new Sound(URLDecoder.decode(ResourceLoader.getResource("fin.wav").getPath(), "UTF-8"));
             compositedBackground = createCompositedBackground();
             beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
             beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));

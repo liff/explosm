@@ -97,6 +97,8 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
+
+
         if(gameState == STATE_GAME) {
 
             if(level.getClockRunning() == false) {
@@ -181,6 +183,10 @@ public class Blowjob extends BasicGame {
             drawGameOver(gc, g);
         }
 
+        if(gameState == STATE_WIN) {
+            g.drawImage(resources.win, 0,0);
+
+        }
         if(gameState == STATE_MENU) {
             drawMainMenu(gc,g);
         }
@@ -222,6 +228,7 @@ public class Blowjob extends BasicGame {
 
     public void victory() {
         gameState = STATE_WIN;
+        resources.winSound.play();
         music.pause();
     }
 
