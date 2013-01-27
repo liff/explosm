@@ -18,6 +18,8 @@ public class Level {
     public List<Rectangle> buttonHitboxes = new ArrayList<Rectangle>();
     public boolean[] buttonStates;
     public List<Cut> allCuts;
+    public Controller upperController;
+    public Controller lowerController;
 
     public boolean clockRunning = true;
 
@@ -36,12 +38,14 @@ public class Level {
 
         this.allowedTime = allowedTime;
         this.clock = new Clock(resources, this.allowedTime);
-
-
+        this.upperController = new Controller(resources.controller1, 285, 300);
+        this.lowerController = new Controller(resources.controller2, 285, 467);
     }
+
     public boolean getClockRunning() {
         return clockRunning;
     }
+
     public void recreate() throws SlickException{
         this.buttonOverlay = createButtonOverlay();
     }
@@ -74,6 +78,13 @@ public class Level {
         return clock.remainingTenths();
     }
 
+    public Controller getControllerUnder(final Position position) {
+        if (resources.controller1.getColor(position.x, position.y).getAlpha() != 0)
+            return upperController;
+        if (resources.controller2.getColor(position.x, position.y).getAlpha() != 0)
+            return lowerController;
+        return null;
+    }
 
     private Image createWireOverlay() throws SlickException {
         final Image image = Image.createOffscreenImage(resources.compositedBackground.getWidth(), resources.compositedBackground.getHeight());

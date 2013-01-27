@@ -43,13 +43,8 @@ public class Blowjob extends BasicGame {
 
     public Image hand;
 
-
-
-    Rectangle startGameHitBoxes;
-    Rectangle quitGameHitBoxes;
-
-    private static AppGameContainer app;
-
+    private Rectangle startGameHitBoxes;
+    private Rectangle quitGameHitBoxes;
 
 
     public Blowjob() throws SlickException {
@@ -100,41 +95,30 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
-        if(gameState == STATE_MENU)
-        if(gameState == STATE_GAME) {
-
-        }
         if(gameState == STATE_GAME) {
             if(level.getClockRunning() == false) {
                 System.out.println("AIKA LOPPUI");
                 gameState = STATE_END;
             }
-        level.update(delta);
-        player.setPositionAndUpdate(input, delta);
+            level.update(delta);
+            player.setPositionAndUpdate(input, delta);
 
             if(showMap == true && mapY >= 0) {
-                //System.out.println("PÄÄSTIIN TÄNNE");
-
                 mapY = mapY - mapSpeed;
             }
             if( showMap == false) {
-                if(mapY < 600) mapY = mapY + mapSpeed;
-
-
+                if(mapY < 600)
+                    mapY = mapY + mapSpeed;
             }
 
-        if (currentLine != null) {
-            currentLine.end = player.getDisturbedPosition();
+            if (currentLine != null) {
+                currentLine.end = player.getDisturbedPosition();
+            }
+            if (pendingCuts != null) {
+                applyCuts(pendingCuts);
+                pendingCuts = null;
+            }
         }
-        if (pendingCuts != null) {
-            applyCuts(pendingCuts);
-            pendingCuts = null;
-        }
-
-
-        }
-
-
     }
 
     @Override
@@ -145,12 +129,14 @@ public class Blowjob extends BasicGame {
         if(gameState == STATE_MENU) drawMainMenu(gc,g);
         if(gameState == STATE_GAME ) {
             gc.setMouseGrabbed(true);
-        g.drawImage(level.background, 0, 0);
-        g.drawImage(level.wireOverlay, 0, 0);
-        g.drawImage(level.buttonOverlay, 0, 0);
-        g.drawImage(cutsOverlay, 0, 0);
-        level.clock.draw(g, 50, 55);
-        g.setColor(new Color(255, 255, 255));
+            g.drawImage(level.background, 0, 0);
+            g.drawImage(level.wireOverlay, 0, 0);
+            g.drawImage(level.buttonOverlay, 0, 0);
+            g.drawImage(cutsOverlay, 0, 0);
+            level.upperController.draw(g);
+            level.lowerController.draw(g);
+            level.clock.draw(g, 50, 55);
+            g.setColor(new Color(255, 255, 255));
             g.setColor(Color.green);
             drawConsole(g);
         //g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
@@ -159,13 +145,13 @@ public class Blowjob extends BasicGame {
         //g.drawString(stringBufferC.toString(), 412, 50);
 
 
-        g.setColor(new Color(255, 255, 255));
-        if (currentLine != null) {
-            g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
-        }
-        if( true) {
-            g.drawImage(resources.instructions,mapX,mapY);
-        }
+            g.setColor(new Color(255, 255, 255));
+            if (currentLine != null) {
+                g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
+            }
+            if( true) {
+                g.drawImage(resources.instructions,mapX,mapY);
+            }
         }
 
     }
@@ -189,6 +175,18 @@ public class Blowjob extends BasicGame {
 
 
     }
+
+    @Override
+    public void mouseWheelMoved(int change) {
+        float delta = change / 120.0f;
+        System.out.println(delta);
+        final Position position = player.getDisturbedPosition();
+        final Controller controller = level.getControllerUnder(position);
+        if (controller != null) {
+            controller.rotateBy(delta);
+        }
+    }
+
     @Override
     public void mousePressed(int button, int x, int y) {
         if(button == 0 && gameState == STATE_MENU) {
@@ -196,7 +194,7 @@ public class Blowjob extends BasicGame {
                    gameState = STATE_GAME;
                }
             if(x >= quitGameHitBoxes.x && x <= quitGameHitBoxes.endX && y >= quitGameHitBoxes.y && y <= quitGameHitBoxes.endY) {
-                app.exit();
+                gameState = STATE_END;
             }
         }
         if(button == 0 && gameState == STATE_GAME) {
@@ -249,7 +247,8 @@ public class Blowjob extends BasicGame {
 
         if(key == 28) {
             System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
-            if(stringBufferUserInput.toString().equalsIgnoreCase("exit")) app.exit();
+            if(stringBufferUserInput.toString().equalsIgnoreCase("exit"))
+                gameState = STATE_END;
             if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe")) {
                 System.out.println("päästiin tänne");
                 System.out.println(stringBufferUserInput.toString());
@@ -274,6 +273,7 @@ public class Blowjob extends BasicGame {
 
         }
     }
+
     public void moveConsoleRows() {
 
         if (consoleRowCurrent < consoleRows.length-1) {
@@ -325,6 +325,7 @@ public class Blowjob extends BasicGame {
         g.drawString("GAME OVER", 100,100 );
               System.out.println("PELI LOPPUI");
     }
+
     @Override
     public void mouseReleased(int button, int x, int y) {
         if(button == 0) {
@@ -356,7 +357,7 @@ public class Blowjob extends BasicGame {
     }
 
     public static void main(String[] args) throws SlickException {
-         app = new AppGameContainer(new Blowjob());
+        AppGameContainer app = new AppGameContainer(new Blowjob());
 
         app.setMinimumLogicUpdateInterval((int)getMinimumFrameTime());
         app.setMaximumLogicUpdateInterval((int)getMaximumFrameTime());

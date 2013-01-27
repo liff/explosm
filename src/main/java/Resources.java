@@ -81,8 +81,6 @@ public class Resources {
         g.drawImage(panelBackground, 0, 0);
         g.drawImage(connectors, 0, 0);
         g.drawImage(sticker, 0, 0);
-        g.drawImage(controller1, 0, 0);
-        g.drawImage(controller2, 0, 0);
         g.drawImage(scale, 0,0);
 
         g.flush();
