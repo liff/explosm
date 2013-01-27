@@ -34,6 +34,7 @@ public class Resources {
     public final Image quit;
     public final Image logo;
     public final Image mainMenuBG;
+    public final Image gameOver;
 
 
     public Resources() throws SlickException {
@@ -56,6 +57,7 @@ public class Resources {
             quit = new Image(URLDecoder.decode(ResourceLoader.getResource("quit.png").getPath(), "UTF-8"));
             logo = new Image(URLDecoder.decode(ResourceLoader.getResource("logo.png").getPath(), "UTF-8"));
             mainMenuBG = new Image(URLDecoder.decode(ResourceLoader.getResource("tausta2.png").getPath(), "UTF-8"));
+            gameOver = new Image(URLDecoder.decode(ResourceLoader.getResource("gameover.png").getPath(), "UTF-8"));
             compositedBackground = createCompositedBackground();
             beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
             beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));

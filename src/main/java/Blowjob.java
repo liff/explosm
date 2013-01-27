@@ -7,7 +7,7 @@ import java.util.List;
 public class Blowjob extends BasicGame {
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
-    private static final int ALLOCATED_TIME = 100000;
+    private static final int ALLOCATED_TIME = 10000;
     private static final int mapStartLocation = 600;
             //3 * 60 * 1000 + 6000;
     private static final int BEAT_SIZE = 50;
@@ -46,6 +46,8 @@ public class Blowjob extends BasicGame {
     Rectangle quitGameHitBoxes;
 
     private static AppGameContainer app;
+
+
 
     public Blowjob() throws SlickException {
         super("Blowjob");
@@ -100,7 +102,10 @@ public class Blowjob extends BasicGame {
 
         }
         if(gameState == 1) {
-            if(level.getClockRunning() == false) gameState = 2;
+            if(level.getClockRunning() == false) {
+                System.out.println("AIKA LOPPUI");
+                gameState = 2;
+            }
         level.update(delta);
         player.setPositionAndUpdate(input, delta);
 
@@ -126,14 +131,14 @@ public class Blowjob extends BasicGame {
 
         }
 
-        if(gameState == 2) {
-            gameEnded();
-            gameState = 3;
-        }
+
     }
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
+        if(gameState == 2) {
+            drawGameOver(gc, g);
+        }
         if(gameState == 0) drawMainMenu(gc,g);
         if(gameState == 1 ) {
             gc.setMouseGrabbed(true);
@@ -159,8 +164,13 @@ public class Blowjob extends BasicGame {
             g.drawImage(resources.instructions,mapX,mapY);
         }
         }
+
     }
 
+    public void drawGameOver(GameContainer gc, Graphics g) {
+
+        g.drawImage(resources.gameOver, 0, 0);
+    }
     public void drawMainMenu(GameContainer gc, Graphics g) {
 
         gc.setMouseGrabbed(false);
@@ -233,18 +243,28 @@ public class Blowjob extends BasicGame {
         if(key == 28) {
             System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
             if(stringBufferUserInput.toString().equalsIgnoreCase("exit")) app.exit();
+            if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe")) {
+                System.out.println("päästiin tänne");
+                System.out.println(stringBufferUserInput.toString());
+
+            }
             moveConsoleRows();
-            stringBufferUserInput = new StringBuffer("");
+           stringBufferUserInput = new StringBuffer("");
         }
         else if(key == 14) {
             if (stringBufferUserInput.length() > 0) stringBufferUserInput.deleteCharAt(stringBufferUserInput.length()-1);
         }
         else {
-            if (stringBufferUserInput.length() < 34) stringBufferUserInput.append(Character.toString(c));
-//          consoleText.add(Character.toString(c));
+            if (stringBufferUserInput.length() < 34) {
+                stringBufferUserInput.append(Character.toString(c));
+
+            }
+
             //stringBufferC.append(c);
         }
+
         consoleRows[consoleRowCurrent] = new StringBuffer("C:\\>").append( stringBufferUserInput.toString() ).toString();
+
         }
     }
     public void moveConsoleRows() {
@@ -294,7 +314,8 @@ public class Blowjob extends BasicGame {
     }
 
     //What happens when game ends is handled here
-    public void gameEnded() {
+    public void gameEnded(GameContainer gc, Graphics g) {
+        g.drawString("GAME OVER", 100,100 );
               System.out.println("PELI LOPPUI");
     }
     @Override
