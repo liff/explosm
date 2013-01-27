@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>jkl.gamejam</groupId>
-  <artifactId>blowjob</artifactId>
+  <artifactId>explosm</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>blowjob</name>
+  <name>explosm</name>
   <inceptionYear>2013</inceptionYear>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,7 +43,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>Blowjob</mainClass>
+              <mainClass>Explosm</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -63,7 +63,7 @@
               </descriptorRefs>
               <archive>
                 <manifest>
-                  <mainClass>Blowjob</mainClass>
+                  <mainClass>Explosm</mainClass>
                 </manifest>
               </archive>
             </configuration>

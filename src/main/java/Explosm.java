@@ -2,7 +2,7 @@ import org.newdawn.slick.*;
 
 import java.util.List;
 
-public class Blowjob extends BasicGame {
+public class Explosm extends BasicGame {
     private static final int STATE_MENU = 0;
     private static final int STATE_GAME = 1;
     private static final int STATE_LOSE = 2;
@@ -47,8 +47,8 @@ public class Blowjob extends BasicGame {
 
     public Music music;
 
-    public Blowjob() throws SlickException {
-        super("Blowjob");
+    public Explosm() throws SlickException {
+        super("Explosm");
     }
 
     @Override
@@ -424,7 +424,7 @@ public class Blowjob extends BasicGame {
     }
 
     public static void main(String[] args) throws SlickException {
-        AppGameContainer app = new AppGameContainer(new Blowjob());
+        AppGameContainer app = new AppGameContainer(new Explosm());
 
         app.setMinimumLogicUpdateInterval((int)getMinimumFrameTime());
         app.setMaximumLogicUpdateInterval((int)getMaximumFrameTime());
