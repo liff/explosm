@@ -7,7 +7,7 @@ import java.util.List;
 public class Blowjob extends BasicGame {
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
-    private static final int ALLOCATED_TIME = 1000000;
+    private static final int ALLOCATED_TIME = 100000;
     private static final int mapStartLocation = 600;
             //3 * 60 * 1000 + 6000;
     private static final int BEAT_SIZE = 50;
@@ -25,7 +25,7 @@ public class Blowjob extends BasicGame {
     private boolean[] desiredButtonStates;
 
     private double mistakeSpeed = 3.0;
-    private int gameState = 1;
+    private int gameState = 0;
 
     public List<String> consoleText;
     public StringBuffer stringBufferC;
@@ -34,12 +34,19 @@ public class Blowjob extends BasicGame {
     public int consoleRowCurrent;
 
     public boolean showMap = false;
-    public boolean lowerMap = false;
     public int mapX;
     public int mapY;
     public int mapSpeed;
 
     public Image hand;
+
+
+
+    Rectangle startGameHitBoxes;
+    Rectangle quitGameHitBoxes;
+
+    private static AppGameContainer app;
+
     public Blowjob() throws SlickException {
         super("Blowjob");
     }
@@ -55,7 +62,7 @@ public class Blowjob extends BasicGame {
         cutsG.setBackground(Color.transparent);
         cutsG.clear();
         cutsG.setColor(new Color(0, 255, 0));
-        desiredButtonStates = new boolean[]{true,true,true,true,true,true,true,true,true,true,true,false};
+        desiredButtonStates = new boolean[]{true,false,false,false,true,true,true,false,true,true,false,false};
         stringBufferC = new StringBuffer("C:\\>");
         stringBufferUserInput = new StringBuffer("");
         consoleRows = new String[8];
@@ -88,20 +95,24 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
+        if(gameState == 0)
         if(gameState == 1) {
-        if(level.getClockRunning() == false) gameState = 2;
+
         }
         if(gameState == 1) {
+            if(level.getClockRunning() == false) gameState = 2;
         level.update(delta);
         player.setPositionAndUpdate(input, delta);
 
             if(showMap == true && mapY >= 0) {
-                System.out.println("PÄÄSTIIN TÄNNE");
+                //System.out.println("PÄÄSTIIN TÄNNE");
 
                 mapY = mapY - mapSpeed;
             }
-            if( lowerMap = true) {
-               // mapY = mapY + mapSpeed;
+            if( showMap == false) {
+                if(mapY < 600) mapY = mapY + mapSpeed;
+
+
             }
 
         if (currentLine != null) {
@@ -123,7 +134,9 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
+        if(gameState == 0) drawMainMenu(gc,g);
         if(gameState == 1 ) {
+            gc.setMouseGrabbed(true);
         g.drawImage(level.background, 0, 0);
         g.drawImage(level.wireOverlay, 0, 0);
         g.drawImage(level.buttonOverlay, 0, 0);
@@ -142,15 +155,35 @@ public class Blowjob extends BasicGame {
         if (currentLine != null) {
             g.drawLine(currentLine.start.x, currentLine.start.y, currentLine.end.x, currentLine.end.y);
         }
-        if(true) {
+        if( true) {
             g.drawImage(resources.instructions,mapX,mapY);
         }
         }
     }
 
+    public void drawMainMenu(GameContainer gc, Graphics g) {
+
+        gc.setMouseGrabbed(false);
+        g.drawImage(resources.mainMenuBG,0,0);
+        g.drawImage(resources.logo, 200, 100);
+        g.drawImage(resources.play, 300, 300);
+        g.drawImage(resources.quit, 300, 400);
+        startGameHitBoxes = new Rectangle(300,300, resources.play.getWidth(),resources.play.getHeight());
+        quitGameHitBoxes =  new Rectangle(300,400, resources.quit.getWidth(),resources.quit.getHeight());
+
+
+    }
     @Override
     public void mousePressed(int button, int x, int y) {
-        if(button == 0) {
+        if(button == 0 && gameState == 0) {
+               if(x >= startGameHitBoxes.x && x <= startGameHitBoxes.endX && y >= startGameHitBoxes.y && y <= startGameHitBoxes.endY) {
+                   gameState = 1;
+               }
+            if(x >= quitGameHitBoxes.x && x <= quitGameHitBoxes.endX && y >= quitGameHitBoxes.y && y <= quitGameHitBoxes.endY) {
+                app.exit();
+            }
+        }
+        if(button == 0 && gameState == 1) {
             hand = resources.hand;
         currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
         final Position p = player.getDisturbedPosition();
@@ -188,9 +221,18 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void keyReleased(int key, char c) {
-        System.out.println("TOIMIIIIII " + key);
+        if(gameState == 0) {
+            System.out.println(key);
+        }
+        if(gameState == 1) {
+        if(key == 1) {
+
+            gameState = 0;
+        }
+
         if(key == 28) {
             System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
+            if(stringBufferUserInput.toString().equalsIgnoreCase("exit")) app.exit();
             moveConsoleRows();
             stringBufferUserInput = new StringBuffer("");
         }
@@ -203,6 +245,7 @@ public class Blowjob extends BasicGame {
             //stringBufferC.append(c);
         }
         consoleRows[consoleRowCurrent] = new StringBuffer("C:\\>").append( stringBufferUserInput.toString() ).toString();
+        }
     }
     public void moveConsoleRows() {
 
@@ -265,7 +308,7 @@ public class Blowjob extends BasicGame {
             currentLine = null;
         }
         showMap = false;
-        mapY = mapStartLocation;
+        //mapY = mapStartLocation;
     }
 
     private void applyCuts(List<Cut> cuts) throws SlickException {
@@ -285,7 +328,7 @@ public class Blowjob extends BasicGame {
     }
 
     public static void main(String[] args) throws SlickException {
-        AppGameContainer app = new AppGameContainer(new Blowjob());
+         app = new AppGameContainer(new Blowjob());
 
         app.setMinimumLogicUpdateInterval((int)getMinimumFrameTime());
         app.setMaximumLogicUpdateInterval((int)getMaximumFrameTime());

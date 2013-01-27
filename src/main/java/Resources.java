@@ -30,6 +30,10 @@ public class Resources {
     public final Image instructions;
     public final Image hand;
     public final Image handResting;
+    public final Image play;
+    public final Image quit;
+    public final Image logo;
+    public final Image mainMenuBG;
 
 
     public Resources() throws SlickException {
@@ -48,6 +52,10 @@ public class Resources {
             instructions = new Image(URLDecoder.decode(ResourceLoader.getResource("paperiohje.png").getPath(), "UTF-8"));
             hand = new Image(URLDecoder.decode(ResourceLoader.getResource("leikkaa75.png").getPath(), "UTF-8"));
             handResting = new Image(URLDecoder.decode(ResourceLoader.getResource("levossa75.png").getPath(), "UTF-8"));
+            play = new Image(URLDecoder.decode(ResourceLoader.getResource("play.png").getPath(), "UTF-8"));
+            quit = new Image(URLDecoder.decode(ResourceLoader.getResource("quit.png").getPath(), "UTF-8"));
+            logo = new Image(URLDecoder.decode(ResourceLoader.getResource("logo.png").getPath(), "UTF-8"));
+            mainMenuBG = new Image(URLDecoder.decode(ResourceLoader.getResource("tausta2.png").getPath(), "UTF-8"));
             compositedBackground = createCompositedBackground();
             beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
             beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));
