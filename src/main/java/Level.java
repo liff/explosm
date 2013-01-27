@@ -162,4 +162,9 @@ public class Level {
         allCuts.addAll(newCuts);
         return newCuts;
     }
+
+    public void nextStep() {
+        step += 1;
+        System.out.println("step was " + (step - 1) + " now " + step);
+    }
 }
