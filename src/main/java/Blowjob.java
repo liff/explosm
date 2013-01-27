@@ -222,6 +222,8 @@ public class Blowjob extends BasicGame {
 
     public void gameOver() {
         gameState = STATE_LOSE;
+        music.pause();
+        resources.death.play(1.0f, 0.1f);
     }
 
     public void drawGameOver(GameContainer gc, Graphics g) {
