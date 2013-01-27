@@ -13,6 +13,16 @@ public class Level {
     private final Resources resources;
     public final Image wireOverlay;
     public final List<Wire> wires;
+    public Wire lowestRedWire;
+    public Wire blackWire;
+    public Wire greenWire;
+    public Wire yellowWire;
+    public Wire redWire;
+    public Wire pinkWire;
+    public Wire fatBlueWire;
+    public Wire j5;
+    public Wire j7;
+    public Wire j9;
     public Image buttonOverlay;
     public final Image background;
     public List<Rectangle> buttonHitboxes = new ArrayList<Rectangle>();
@@ -20,6 +30,7 @@ public class Level {
     public List<Cut> allCuts;
     public Controller upperController;
     public Controller lowerController;
+    public int step = 1;
 
     public boolean clockRunning = true;
 
@@ -28,9 +39,16 @@ public class Level {
         this.resources = resources;
         this.background = resources.compositedBackground;
         this.wires = new ArrayList<Wire>();
-        for (final Image wireImage: resources.wires) {
-            this.wires.add(new Wire(wireImage));
-        }
+        this.wires.add(fatBlueWire = new Wire(resources.fatBlueWire, "fat blue"));
+        this.wires.add(j9 = new Wire(resources.j9, "j9"));
+        this.wires.add(lowestRedWire = new Wire(resources.lowestRedWire, "lowest red"));
+        this.wires.add(j7 = new Wire(resources.j7, "j7"));
+        this.wires.add(yellowWire = new Wire(resources.yellowWire, "yellow"));
+        this.wires.add(j5 = new Wire(resources.j5, "j5"));
+        this.wires.add(greenWire = new Wire(resources.greenWire, "green"));
+        this.wires.add(pinkWire = new Wire(resources.pinkWire, "pink"));
+        this.wires.add(blackWire = new Wire(resources.blackWire, "black"));
+        this.wires.add(redWire = new Wire(resources.redWire, "red"));
         this.allCuts = new ArrayList<Cut>();
         this.wireOverlay = createWireOverlay();
         this.buttonStates = new boolean[3 * 4];

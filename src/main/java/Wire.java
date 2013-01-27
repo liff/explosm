@@ -6,9 +6,11 @@ import java.util.List;
 
 public class Wire {
     public final Image image;
+    public final String name;
 
-    public Wire(final Image image) {
+    public Wire(final Image image, final String name) {
         this.image = image;
+        this.name = name;
     }
 
     public Rectangle getHitRectangle(final List<Position> points) {
@@ -40,5 +42,9 @@ public class Wire {
     public boolean doesHit(final Position point) {
         final Color colorUnderPoint = image.getColor(point.x, point.y);
         return colorUnderPoint.getAlpha() != 0;
+    }
+
+    public String toString() {
+        return String.format("Wire(%s)", name);
     }
 }

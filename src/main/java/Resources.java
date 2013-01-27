@@ -35,6 +35,16 @@ public class Resources {
     public final Image logo;
     public final Image mainMenuBG;
     public final Image gameOver;
+    public Image lowestRedWire;
+    public Image blackWire;
+    public Image greenWire;
+    public Image yellowWire;
+    public Image redWire;
+    public Image pinkWire;
+    public Image fatBlueWire;
+    public Image j5;
+    public Image j7;
+    public Image j9;
 
 
     public Resources() throws SlickException {
@@ -89,16 +99,17 @@ public class Resources {
 
     private List<Image> loadWires() throws SlickException {
         final List<Image> images = new ArrayList<Image>();
-        images.add(new Image(ResourceLoader.getResource("j10.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j9.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j8.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j7.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j6.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j5.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j4.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j3.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j2.png").getFile()));
-        images.add(new Image(ResourceLoader.getResource("j1.png").getFile()));
+
+        images.add(fatBlueWire =new Image(ResourceLoader.getResource("j10.png").getFile()));
+        images.add(j9 = new Image(ResourceLoader.getResource("j9.png").getFile()));
+        images.add(lowestRedWire = new Image(ResourceLoader.getResource("j8.png").getFile()));
+        images.add(j7 = new Image(ResourceLoader.getResource("j7.png").getFile()));
+        images.add(yellowWire = new Image(ResourceLoader.getResource("j6.png").getFile()));
+        images.add(j5 = new Image(ResourceLoader.getResource("j5.png").getFile()));
+        images.add(greenWire = new Image(ResourceLoader.getResource("j4.png").getFile()));
+        images.add(pinkWire = new Image(ResourceLoader.getResource("j3.png").getFile()));
+        images.add(blackWire = new Image(ResourceLoader.getResource("j2.png").getFile()));
+        images.add(redWire = new Image(ResourceLoader.getResource("j1.png").getFile()));
         return images;
     }
 }
