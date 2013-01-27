@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LueLiikerata {
-    public static List<Double> read() throws SlickException {
-        Image kuva = new Image("src/main/resources/kayra.png");
+    public static List<Double> read(Resources resources) throws SlickException {
         List<Double> yKoordinaatit = new ArrayList<Double>();
         List<Double> ySkaalattuna = new ArrayList<Double>();
         double suurin = 0;
@@ -17,9 +16,9 @@ public class LueLiikerata {
 
         double erotus = 0;
 
-        for (int i = 0; i < kuva.getWidth(); i++) {
-            for (int j = 0; j < kuva.getHeight(); j++) {
-                if (kuva.getColor(i, j).getRed() == 0 && kuva.getColor(i, j).getGreen() == 0 && kuva.getColor(i, j).getBlue() == 0) {
+        for (int i = 0; i < resources.kayra.getWidth(); i++) {
+            for (int j = 0; j < resources.kayra.getHeight(); j++) {
+                if (resources.kayra.getColor(i, j).getRed() == 0 && resources.kayra.getColor(i, j).getGreen() == 0 && resources.kayra.getColor(i, j).getBlue() == 0) {
                     yKoordinaatit.add((double)j);
                     break;
                 }

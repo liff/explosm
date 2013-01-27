@@ -68,7 +68,7 @@ public class Blowjob extends BasicGame {
         stringBufferUserInput = new StringBuffer("");
         consoleRows = new String[8];
         consoleRows[0] = "C:\\>";
-        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 3.0, BEAT_SIZE);
+        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(resources), 3.0, BEAT_SIZE);
         player = new Player(heart);
         hand = resources.handResting;
         mapY = 600;
@@ -257,6 +257,7 @@ public class Blowjob extends BasicGame {
             System.out.println("upper current angle " + getControllerAngle(level.upperController));
             System.out.println("lower current angle " + getControllerAngle(level.lowerController));
         }
+        resources.rullerTick.play(1.0f, 0.5f);
     }
 
     @Override

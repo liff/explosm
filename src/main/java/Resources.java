@@ -27,6 +27,7 @@ public class Resources {
     public final Sound consoleEnter;
     public final Sound death;
     public final Sound winSound;
+    public final Sound rullerTick;
     public final Music mainMusic;
     public final Image[] digits;
     public final Image colon;
@@ -52,6 +53,7 @@ public class Resources {
     public Image j5;
     public Image j7;
     public Image j9;
+    public Image kayra;
 
 
     public Resources() throws SlickException {
@@ -85,6 +87,8 @@ public class Resources {
             consoleEnter = new Sound(URLDecoder.decode(ResourceLoader.getResource("console_enter.wav").getPath(), "UTF-8"));
             buttonClick = new Sound((URLDecoder.decode(ResourceLoader.getResource("click_maybe.wav").getPath(), "UTF-8")));
             mainMusic = new Music((URLDecoder.decode(ResourceLoader.getResource("chucknorriswatch.wav").getPath(), "UTF-8")));
+            kayra = new Image(URLDecoder.decode(ResourceLoader.getResource("kayra.png").getPath(), "UTF-8"));
+            rullerTick = new Sound((URLDecoder.decode(ResourceLoader.getResource("ruller_tick.wav").getPath(), "UTF-8")));
             digits = new Image[10];
             for (int i = 0; i < 10; i++) {
                 digits[i] = new Image(URLDecoder.decode(ResourceLoader.getResource(i + ".png").getPath(), "UTF-8"));
