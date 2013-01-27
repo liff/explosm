@@ -1,6 +1,7 @@
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -22,6 +23,9 @@ public class Resources {
     public final Sound beat1;
     public final Sound beat2;
     public final Sound buttonClick;
+    public final Sound consoleBeep;
+    public final Sound consoleEnter;
+    public final Music mainMusic;
     public final Image[] digits;
     public final Image colon;
     public final Image controller1;
@@ -61,7 +65,10 @@ public class Resources {
             compositedBackground = createCompositedBackground();
             beat1 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat1_kovempi.wav").getPath(), "UTF-8"));
             beat2 = new Sound(URLDecoder.decode(ResourceLoader.getResource("beat2_kovempi.wav").getPath(), "UTF-8"));
+            consoleBeep = new Sound(URLDecoder.decode(ResourceLoader.getResource("consolekeypress.wav").getPath(), "UTF-8"));
+            consoleEnter = new Sound(URLDecoder.decode(ResourceLoader.getResource("console_enter.wav").getPath(), "UTF-8"));
             buttonClick = new Sound((URLDecoder.decode(ResourceLoader.getResource("click_maybe.wav").getPath(), "UTF-8")));
+            mainMusic = new Music((URLDecoder.decode(ResourceLoader.getResource("chucknorriswatch.wav").getPath(), "UTF-8")));
             digits = new Image[10];
             for (int i = 0; i < 10; i++) {
                 digits[i] = new Image(URLDecoder.decode(ResourceLoader.getResource(i + ".png").getPath(), "UTF-8"));

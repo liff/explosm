@@ -10,7 +10,7 @@ public class Blowjob extends BasicGame {
     private static final int STATE_END  = 2;
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
-    private static final int ALLOCATED_TIME = 100000;
+    private static final int ALLOCATED_TIME = 1000000;
     private static final int mapStartLocation = 600;
             //3 * 60 * 1000 + 6000;
     private static final int BEAT_SIZE = 50;
@@ -46,6 +46,7 @@ public class Blowjob extends BasicGame {
     private Rectangle startGameHitBoxes;
     private Rectangle quitGameHitBoxes;
 
+    public Music music;
 
     public Blowjob() throws SlickException {
         super("Blowjob");
@@ -71,8 +72,9 @@ public class Blowjob extends BasicGame {
         player = new Player(heart);
         hand = resources.handResting;
         mapY = 600;
-
         mapSpeed = 10;
+        music = resources.mainMusic;
+
         player.addBeatListener(new Heart.BeatListener() {
             public double phase() {
                 return 0;
@@ -96,6 +98,7 @@ public class Blowjob extends BasicGame {
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
         if(gameState == STATE_GAME) {
+
             if(level.getClockRunning() == false) {
                 System.out.println("AIKA LOPPUI");
                 gameState = STATE_END;
@@ -155,6 +158,10 @@ public class Blowjob extends BasicGame {
         }
 
     }
+
+    public double getControllerAngle(Controller controller) {
+      return Math.abs(controller.currentAngle);
+    }
     public void bombDefused(GameContainer gc, Graphics g) {
         g.drawString("BOMB DEFUSED", 300, 100);
     }
@@ -187,17 +194,20 @@ public class Blowjob extends BasicGame {
         }
     }
 
+
     @Override
     public void mousePressed(int button, int x, int y) {
         if(button == 0 && gameState == STATE_MENU) {
                if(x >= startGameHitBoxes.x && x <= startGameHitBoxes.endX && y >= startGameHitBoxes.y && y <= startGameHitBoxes.endY) {
                    gameState = STATE_GAME;
+                   music.loop();
                }
             if(x >= quitGameHitBoxes.x && x <= quitGameHitBoxes.endX && y >= quitGameHitBoxes.y && y <= quitGameHitBoxes.endY) {
                 gameState = STATE_END;
             }
         }
         if(button == 0 && gameState == STATE_GAME) {
+            System.out.println("YLEMIPI: " + getControllerAngle(level.upperController) + "ALEMPI: " + getControllerAngle(level.lowerController));
             hand = resources.hand;
             currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
             final Position p = player.getDisturbedPosition();
@@ -246,6 +256,7 @@ public class Blowjob extends BasicGame {
         }
 
         if(key == 28) {
+            resources.consoleEnter.play(1.0f, 0.1f);
             System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
             if(stringBufferUserInput.toString().equalsIgnoreCase("exit"))
                 gameState = STATE_END;
@@ -262,6 +273,7 @@ public class Blowjob extends BasicGame {
         }
         else {
             if (stringBufferUserInput.length() < 34) {
+                resources.consoleBeep.play(1.0f, 0.1f);
                 stringBufferUserInput.append(Character.toString(c));
 
             }
