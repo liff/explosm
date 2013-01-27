@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Blowjob extends BasicGame {
+    private static final int STATE_MENU = 0;
+    private static final int STATE_GAME = 1;
+    private static final int STATE_END  = 2;
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
     private static final int ALLOCATED_TIME = 100000;
@@ -25,7 +28,7 @@ public class Blowjob extends BasicGame {
     private boolean[] desiredButtonStates;
 
     private double mistakeSpeed = 3.0;
-    private int gameState = 0;
+    private int gameState = STATE_MENU;
 
     public List<String> consoleText;
     public StringBuffer stringBufferC;
@@ -97,14 +100,14 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void update(GameContainer gc, int delta) throws SlickException {
-        if(gameState == 0)
-        if(gameState == 1) {
+        if(gameState == STATE_MENU)
+        if(gameState == STATE_GAME) {
 
         }
-        if(gameState == 1) {
+        if(gameState == STATE_GAME) {
             if(level.getClockRunning() == false) {
                 System.out.println("AIKA LOPPUI");
-                gameState = 2;
+                gameState = STATE_END;
             }
         level.update(delta);
         player.setPositionAndUpdate(input, delta);
@@ -136,11 +139,11 @@ public class Blowjob extends BasicGame {
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        if(gameState == 2) {
+        if(gameState == STATE_END) {
             drawGameOver(gc, g);
         }
-        if(gameState == 0) drawMainMenu(gc,g);
-        if(gameState == 1 ) {
+        if(gameState == STATE_MENU) drawMainMenu(gc,g);
+        if(gameState == STATE_GAME ) {
             gc.setMouseGrabbed(true);
         g.drawImage(level.background, 0, 0);
         g.drawImage(level.wireOverlay, 0, 0);
@@ -188,59 +191,60 @@ public class Blowjob extends BasicGame {
     }
     @Override
     public void mousePressed(int button, int x, int y) {
-        if(button == 0 && gameState == 0) {
+        if(button == 0 && gameState == STATE_MENU) {
                if(x >= startGameHitBoxes.x && x <= startGameHitBoxes.endX && y >= startGameHitBoxes.y && y <= startGameHitBoxes.endY) {
-                   gameState = 1;
+                   gameState = STATE_GAME;
                }
             if(x >= quitGameHitBoxes.x && x <= quitGameHitBoxes.endX && y >= quitGameHitBoxes.y && y <= quitGameHitBoxes.endY) {
                 app.exit();
             }
         }
-        if(button == 0 && gameState == 1) {
+        if(button == 0 && gameState == STATE_GAME) {
             hand = resources.hand;
-        currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
-        final Position p = player.getDisturbedPosition();
-        int index = -1;
-        for(Rectangle rectangle: level.buttonHitboxes) {
-            index++;
-            if(p.x >= rectangle.x && p.x <= rectangle.endX && p.y >= rectangle.y && p.y <= rectangle.endY) {
-                System.out.println("OSUI: " + rectangle);
-                System.out.println("indeksi: " + index);
-                try {
-                    level.toggleButton(index);
-                    if(level.buttonStates[index] != desiredButtonStates[index]) wrongButtonPressed();
-                    resources.buttonClick.play(1.0f, 1.0f);
-                } catch (SlickException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-
-                for(int i = 0; i<level.buttonStates.length; i++) {
-
-                    if(level.buttonStates[i] != desiredButtonStates[i]) {
-
-                        break;
+            currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
+            final Position p = player.getDisturbedPosition();
+            int index = -1;
+            for(Rectangle rectangle: level.buttonHitboxes) {
+                index++;
+                if(p.x >= rectangle.x && p.x <= rectangle.endX && p.y >= rectangle.y && p.y <= rectangle.endY) {
+                    System.out.println("OSUI: " + rectangle);
+                    System.out.println("indeksi: " + index);
+                    try {
+                        level.toggleButton(index);
+                        if(level.buttonStates[index] != desiredButtonStates[index]) wrongButtonPressed();
+                        resources.buttonClick.play(1.0f, 1.0f);
+                    } catch (SlickException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
 
-                    if(i >= level.buttonStates.length -1) correctButtonCombination();
+                    for(int i = 0; i<level.buttonStates.length; i++) {
+
+                        if(level.buttonStates[i] != desiredButtonStates[i]) {
+
+                            break;
+                        }
+
+                        if(i >= level.buttonStates.length -1) correctButtonCombination();
+                    }
+                    break;
                 }
-                break;
             }
-            }
-        } else {
-        System.out.println("Nappi" + button);
-          showMap = true;
+        }
+        else {
+            System.out.println("Nappi" + button);
+            showMap = true;
         }
     }
 
     @Override
     public void keyReleased(int key, char c) {
-        if(gameState == 0) {
+        if(gameState == STATE_MENU) {
             System.out.println(key);
         }
-        if(gameState == 1) {
+        if(gameState == STATE_GAME) {
         if(key == 1) {
 
-            gameState = 0;
+            gameState = STATE_MENU;
         }
 
         if(key == 28) {
@@ -313,7 +317,7 @@ public class Blowjob extends BasicGame {
     }
 
     public void stopGame() {
-        gameState = 0;
+        gameState = STATE_MENU;
     }
 
     //What happens when game ends is handled here
