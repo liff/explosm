@@ -6,9 +6,10 @@ public class Blowjob extends BasicGame {
     private static final int STATE_MENU = 0;
     private static final int STATE_GAME = 1;
     private static final int STATE_LOSE = 2;
+    private static final int STATE_WIN = 3;
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
-    private static final int ALLOCATED_TIME = 1000000;
+    private static final int ALLOCATED_TIME = 2 * 60 * 1000;
     private static final int mapStartLocation = 600;
             //3 * 60 * 1000 + 6000;
     private static final int BEAT_SIZE = 50;
@@ -55,6 +56,7 @@ public class Blowjob extends BasicGame {
         resources = new Resources();
         input = gc.getInput();
         level = new Level(ALLOCATED_TIME, resources);
+        level.step = 1;
 
         cutsOverlay = Image.createOffscreenImage(gc.getWidth(), gc.getHeight());
         final Graphics cutsG = cutsOverlay.getGraphics();
@@ -66,7 +68,7 @@ public class Blowjob extends BasicGame {
         stringBufferUserInput = new StringBuffer("");
         consoleRows = new String[8];
         consoleRows[0] = "C:\\>";
-        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 0.0, BEAT_SIZE);
+        heart = new Heart(getMinimumFrameTime(), LueLiikerata.read(), 3.0, BEAT_SIZE);
         player = new Player(heart);
         hand = resources.handResting;
         mapY = 600;
@@ -195,11 +197,7 @@ public class Blowjob extends BasicGame {
             g.setColor(new Color(255, 255, 255));
             g.setColor(Color.green);
             drawConsole(g);
-        //g.drawString("sakset", player.getDisturbedPosition().x, player.getDisturbedPosition().y);
             g.drawImage(hand, player.getDisturbedPosition().x -187, player.getDisturbedPosition().y -258);
-            //g.drawImage(resources.hand, 0, 0, 0 , ,0 ,10);
-        //g.drawString(stringBufferC.toString(), 412, 50);
-
 
             g.setColor(new Color(255, 255, 255));
             if (currentLine != null) {
@@ -215,10 +213,6 @@ public class Blowjob extends BasicGame {
     public double getControllerAngle(Controller controller) {
       return Math.abs(controller.currentAngle);
     }
-    public void bombDefused(GameContainer gc, Graphics g) {
-        g.drawString("BOMB DEFUSED", 300, 100);
-    }
-
 
     public void gameOver() {
         gameState = STATE_LOSE;
@@ -226,12 +220,16 @@ public class Blowjob extends BasicGame {
         resources.death.play(1.0f, 0.1f);
     }
 
-    public void drawGameOver(GameContainer gc, Graphics g) {
+    public void victory() {
+        gameState = STATE_WIN;
+        music.pause();
+    }
 
+    public void drawGameOver(GameContainer gc, Graphics g) {
         g.drawImage(resources.gameOver, 0, 0);
     }
-    public void drawMainMenu(GameContainer gc, Graphics g) {
 
+    public void drawMainMenu(GameContainer gc, Graphics g) {
         gc.setMouseGrabbed(false);
         g.drawImage(resources.mainMenuBG,0,0);
         g.drawImage(resources.logo, 200, 100);
@@ -239,8 +237,6 @@ public class Blowjob extends BasicGame {
         g.drawImage(resources.quit, 300, 400);
         startGameHitBoxes = new Rectangle(300,300, resources.play.getWidth(),resources.play.getHeight());
         quitGameHitBoxes =  new Rectangle(300,400, resources.quit.getWidth(),resources.quit.getHeight());
-
-
     }
 
     @Override
@@ -256,10 +252,9 @@ public class Blowjob extends BasicGame {
         }
     }
 
-
     @Override
     public void mousePressed(int button, int x, int y) {
-        if(button == 0 && gameState == STATE_MENU) {
+        if (button == 0 && gameState == STATE_MENU) {
                if(x >= startGameHitBoxes.x && x <= startGameHitBoxes.endX && y >= startGameHitBoxes.y && y <= startGameHitBoxes.endY) {
                    gameState = STATE_GAME;
                    music.loop();
@@ -268,13 +263,13 @@ public class Blowjob extends BasicGame {
                 gameState = STATE_LOSE;
             }
         }
-        if(button == 0 && gameState == STATE_GAME) {
+        if (button == 0 && gameState == STATE_GAME) {
             System.out.println("YLEMIPI: " + getControllerAngle(level.upperController) + "ALEMPI: " + getControllerAngle(level.lowerController));
             hand = resources.hand;
             currentLine = new Line(player.getDisturbedPosition(), player.getDisturbedPosition());
             final Position p = player.getDisturbedPosition();
             int index = -1;
-            for(Rectangle rectangle: level.buttonHitboxes) {
+            for (Rectangle rectangle: level.buttonHitboxes) {
                 index++;
                 if(p.x >= rectangle.x && p.x <= rectangle.endX && p.y >= rectangle.y && p.y <= rectangle.endY) {
                     System.out.println("OSUI: " + rectangle);
@@ -287,14 +282,12 @@ public class Blowjob extends BasicGame {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
 
-                    for(int i = 0; i<level.buttonStates.length; i++) {
-
-                        if(level.buttonStates[i] != desiredButtonStates[i]) {
-
+                    for (int i = 0; i<level.buttonStates.length; i++) {
+                        if (level.buttonStates[i] != desiredButtonStates[i]) {
                             break;
                         }
-
-                        if(i >= level.buttonStates.length -1) correctButtonCombination();
+                        if (i >= level.buttonStates.length -1)
+                            correctButtonCombination();
                     }
                     break;
                 }
@@ -312,52 +305,47 @@ public class Blowjob extends BasicGame {
             System.out.println(key);
         }
         if(gameState == STATE_GAME) {
-        if(key == 1) {
 
-            gameState = STATE_MENU;
-        }
-
-        if(key == 28) {
-            resources.consoleEnter.play(1.0f, 0.1f);
-
-            System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
-            if(stringBufferUserInput.toString().equalsIgnoreCase("exit"))
-                gameState = STATE_LOSE;
-            if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe")
-                && getControllerAngle(level.upperController) > 44 && getControllerAngle(level.upperController) < 52
-                && getControllerAngle(level.lowerController) > 44 && getControllerAngle(level.lowerController) < 52
-                && level.step == 5) {
-                level.nextStep();
+            if(key == 1) {
+                gameState = STATE_MENU;
             }
-            else if(stringBufferUserInput.toString().equalsIgnoreCase("Disable_timer.jar") && level.step == 10) {
-                level.nextStep();
+
+            if(key == 28) {
+                resources.consoleEnter.play(1.0f, 0.1f);
+
+                System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
+                if(stringBufferUserInput.toString().equalsIgnoreCase("exit"))
+                    gameState = STATE_LOSE;
+                if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe")
+                    && getControllerAngle(level.upperController) > 44 && getControllerAngle(level.upperController) < 52
+                    && getControllerAngle(level.lowerController) > 44 && getControllerAngle(level.lowerController) < 52
+                    && level.step == 5) {
+                    level.nextStep();
+                }
+                else if(stringBufferUserInput.toString().equalsIgnoreCase("Disabletimer.jar") && level.step == 10) {
+                    victory();
+                }
+                else {
+                    gameOver();
+                }
+                moveConsoleRows();
+                stringBufferUserInput = new StringBuffer("");
+            }
+            else if(key == 14) {
+                if (stringBufferUserInput.length() > 0) stringBufferUserInput.deleteCharAt(stringBufferUserInput.length()-1);
             }
             else {
-                gameOver();
+                if (stringBufferUserInput.length() < 34) {
+                    resources.consoleBeep.play(1.0f, 0.1f);
+                    stringBufferUserInput.append(Character.toString(c));
+
+                }
             }
-            moveConsoleRows();
-            stringBufferUserInput = new StringBuffer("");
-        }
-        else if(key == 14) {
-            if (stringBufferUserInput.length() > 0) stringBufferUserInput.deleteCharAt(stringBufferUserInput.length()-1);
-        }
-        else {
-            if (stringBufferUserInput.length() < 34) {
-                resources.consoleBeep.play(1.0f, 0.1f);
-                stringBufferUserInput.append(Character.toString(c));
-
-            }
-
-            //stringBufferC.append(c);
-        }
-
-        consoleRows[consoleRowCurrent] = new StringBuffer("C:\\>").append( stringBufferUserInput.toString() ).toString();
-
+            consoleRows[consoleRowCurrent] = new StringBuffer("C:\\>").append( stringBufferUserInput.toString() ).toString();
         }
     }
 
     public void moveConsoleRows() {
-
         if (consoleRowCurrent < consoleRows.length-1) {
             consoleRowCurrent++;
         }
@@ -379,10 +367,8 @@ public class Blowjob extends BasicGame {
          System.out.println("RÄJÄHTI");
          double heartSpeed = heart.getSpeed();
          heart.setSpeed(heartSpeed+ mistakeSpeed);
-
-
-
      }
+
     //Tasks that are done when player enters correct button combination
     public void correctButtonCombination() {
         System.out.println("OIKEA YHDISTELMÄ");
