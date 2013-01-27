@@ -122,37 +122,45 @@ public class Blowjob extends BasicGame {
                     switch (level.step) {
                         case 1:
                             if (cut.wire == level.lowestRedWire)
-                                level.step = 2;
+                                level.nextStep();
                             else
                                 gameOver();
                             break;
                         case 2:
                             if (cut.wire == level.blackWire)
-                                level.step = 3;
+                                level.nextStep();
                             else
                                 gameOver();
                             break;
                         case 3:
-                            if (cut.wire == level.greenWire && level.upperController.currentAngle <= -53  && level.upperController.currentAngle >= -60)
-                                level.step = 4;
+                            if (cut.wire == level.greenWire
+                                    && getControllerAngle(level.upperController) <= 80 && getControllerAngle(level.upperController) >= 75
+                                    && getControllerAngle(level.lowerController) <= 25 && getControllerAngle(level.lowerController) >= 15)
+                                level.nextStep();
                             else
                                 gameOver();
                             break;
-                        case 15:
+                        case 6:
                             if (cut.wire == level.yellowWire)
-                                level.step = 16;
+                                level.nextStep();
                             else
                                 gameOver();
                             break;
-                        case 17:
+                        case 7:
+                            if (cut.wire == level.redWire)
+                                level.nextStep();
+                            else
+                                gameOver();
+                            break;
+                        case 8:
                             if (cut.wire == level.pinkWire)
-                                level.step = 18;
+                                level.nextStep();
                             else
                                 gameOver();
                             break;
-                        case 18:
+                        case 9:
                             if (cut.wire == level.fatBlueWire)
-                                level.step = 19;
+                                level.nextStep();
                             else
                                 gameOver();
                             break;
@@ -243,7 +251,8 @@ public class Blowjob extends BasicGame {
         final Controller controller = level.getControllerUnder(position);
         if (controller != null) {
             controller.rotateBy(delta);
-            System.out.println("current angle " + controller.currentAngle);
+            System.out.println("upper current angle " + getControllerAngle(level.upperController));
+            System.out.println("lower current angle " + getControllerAngle(level.lowerController));
         }
     }
 
@@ -310,16 +319,21 @@ public class Blowjob extends BasicGame {
 
         if(key == 28) {
             resources.consoleEnter.play(1.0f, 0.1f);
+
             System.out.println("PAINOIT ENTTERIÄ: " + stringBufferUserInput.toString());
             if(stringBufferUserInput.toString().equalsIgnoreCase("exit"))
                 gameState = STATE_LOSE;
-            if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe")) {
-                System.out.println("päästiin tänne");
-                System.out.println(stringBufferUserInput.toString());
-
+            if(stringBufferUserInput.toString().equalsIgnoreCase("Math.exe") && level.step == 5) {
+                level.nextStep();
+            }
+            else if(stringBufferUserInput.toString().equalsIgnoreCase("Disable_timer.jar") && level.step == 10) {
+                level.nextStep();
+            }
+            else {
+                gameOver();
             }
             moveConsoleRows();
-           stringBufferUserInput = new StringBuffer("");
+            stringBufferUserInput = new StringBuffer("");
         }
         else if(key == 14) {
             if (stringBufferUserInput.length() > 0) stringBufferUserInput.deleteCharAt(stringBufferUserInput.length()-1);
@@ -369,6 +383,7 @@ public class Blowjob extends BasicGame {
     //Tasks that are done when player enters correct button combination
     public void correctButtonCombination() {
         System.out.println("OIKEA YHDISTELMÄ");
+        level.nextStep();
     }
 
     public void stopGame() {
