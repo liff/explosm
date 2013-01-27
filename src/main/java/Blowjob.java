@@ -7,7 +7,7 @@ import java.util.List;
 public class Blowjob extends BasicGame {
     private static final int MAX_FRAME_RATE = 60;
     private static final int MIN_FRAME_RATE = 10;
-    private static final int ALLOCATED_TIME = 10000;
+    private static final int ALLOCATED_TIME = 100000;
     private static final int mapStartLocation = 600;
             //3 * 60 * 1000 + 6000;
     private static final int BEAT_SIZE = 50;
@@ -165,6 +165,9 @@ public class Blowjob extends BasicGame {
         }
         }
 
+    }
+    public void bombDefused(GameContainer gc, Graphics g) {
+        g.drawString("BOMB DEFUSED", 300, 100);
     }
 
     public void drawGameOver(GameContainer gc, Graphics g) {
